@@ -1,0 +1,5 @@
+Anthropic Skills License
+
+This repository and its contents are provided by Anthropic. 
+For complete licensing terms, please refer to the official repository at:
+https://github.com/anthropics/skills
