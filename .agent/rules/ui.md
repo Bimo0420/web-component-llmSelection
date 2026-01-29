@@ -1,3 +1,7 @@
+---
+trigger: always_on
+---
+
 # Component Context: AI Agent Web Interface
 
 ## 1. Scope & Tech Stack
