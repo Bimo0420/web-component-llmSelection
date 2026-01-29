@@ -1,5 +1,5 @@
 export type ModelArchitecture = "Dense" | "MoE";
-export type CapabilityLevel = "Basic" | "Advanced" | "Excellent";
+export type CapabilityLevel = "Basic" | "Good" | "Advanced" | "Excellent" | "Think Mode";
 
 export interface ModelData {
     id: string;
@@ -31,7 +31,7 @@ export const MODELS: ModelData[] = [
         "architecture": "Dense",
         "params": 120,
         "context_window": 128000,
-        "capabilities": { "reasoning": "Excellent", "coding": "Excellent" },
+        "capabilities": { "reasoning": "Advanced", "coding": "Excellent" },
         "benchmarks": {
             "mmlu_pro": 88.5,
             "ifeval": 92.0,
@@ -47,7 +47,7 @@ export const MODELS: ModelData[] = [
         "architecture": "Dense",
         "params": 109,
         "context_window": 10000000,
-        "capabilities": { "reasoning": "Excellent", "coding": "Excellent" },
+        "capabilities": { "reasoning": "Advanced", "coding": "Excellent" },
         "benchmarks": {
             "mmlu_pro": 86.0,
             "ifeval": 90.5,
@@ -63,7 +63,7 @@ export const MODELS: ModelData[] = [
         "architecture": "Dense",
         "params": 72,
         "context_window": 256000,
-        "capabilities": { "reasoning": "Excellent", "coding": "Excellent" },
+        "capabilities": { "reasoning": "Advanced", "coding": "Excellent" },
         "benchmarks": {
             "mmlu_pro": 84.0,
             "ifeval": 88.0,
@@ -79,7 +79,7 @@ export const MODELS: ModelData[] = [
         "architecture": "Dense",
         "params": 70,
         "context_window": 128000,
-        "capabilities": { "reasoning": "Advanced", "coding": "Advanced" },
+        "capabilities": { "reasoning": "Advanced", "coding": "Good" },
         "benchmarks": {
             "mmlu_pro": 82.0,
             "ifeval": 85.0,
@@ -112,7 +112,7 @@ export const MODELS: ModelData[] = [
         "architecture": "MoE",
         "params": 30,
         "context_window": 131000,
-        "capabilities": { "reasoning": "Advanced", "coding": "Advanced" },
+        "capabilities": { "reasoning": "Think Mode", "coding": "Excellent" },
         "benchmarks": {
             "mmlu_pro": 75.0,
             "ifeval": 78.0,
@@ -129,7 +129,7 @@ export const MODELS: ModelData[] = [
         "architecture": "Dense",
         "params": 24,
         "context_window": 128000,
-        "capabilities": { "reasoning": "Advanced", "coding": "Advanced" },
+        "capabilities": { "reasoning": "Good", "coding": "Good" },
         "benchmarks": {
             "mmlu_pro": 72.0,
             "ifeval": 75.0,
@@ -145,7 +145,7 @@ export const MODELS: ModelData[] = [
         "architecture": "Dense",
         "params": 20,
         "context_window": 128000,
-        "capabilities": { "reasoning": "Advanced", "coding": "Basic" },
+        "capabilities": { "reasoning": "Advanced", "coding": "Excellent" },
         "benchmarks": {
             "mmlu_pro": 70.0,
             "ifeval": 72.0,
@@ -161,7 +161,7 @@ export const MODELS: ModelData[] = [
         "architecture": "Dense",
         "params": 15,
         "context_window": 131000,
-        "capabilities": { "reasoning": "Advanced", "coding": "Basic" },
+        "capabilities": { "reasoning": "Advanced", "coding": "Good" },
         "benchmarks": {
             "mmlu_pro": 68.0,
             "ifeval": 70.0,
@@ -177,7 +177,7 @@ export const MODELS: ModelData[] = [
         "architecture": "Dense",
         "params": 14,
         "context_window": 16000,
-        "capabilities": { "reasoning": "Excellent", "coding": "Advanced" },
+        "capabilities": { "reasoning": "Advanced", "coding": "Excellent" },
         "benchmarks": {
             "mmlu_pro": 75.0,
             "ifeval": 76.0,
@@ -193,7 +193,7 @@ export const MODELS: ModelData[] = [
         "architecture": "MoE",
         "params": 14,
         "context_window": 128000,
-        "capabilities": { "reasoning": "Advanced", "coding": "Advanced" },
+        "capabilities": { "reasoning": "Think Mode", "coding": "Excellent" },
         "benchmarks": {
             "mmlu_pro": 70.0,
             "ifeval": 72.0,
@@ -210,7 +210,7 @@ export const MODELS: ModelData[] = [
         "architecture": "Dense",
         "params": 12,
         "context_window": 128000,
-        "capabilities": { "reasoning": "Advanced", "coding": "Basic" },
+        "capabilities": { "reasoning": "Basic", "coding": "Good" },
         "benchmarks": {
             "mmlu_pro": 65.0,
             "ifeval": 68.0,
@@ -226,7 +226,7 @@ export const MODELS: ModelData[] = [
         "architecture": "Dense",
         "params": 8,
         "context_window": 256000,
-        "capabilities": { "reasoning": "Basic", "coding": "Basic" },
+        "capabilities": { "reasoning": "Good", "coding": "Good" },
         "benchmarks": {
             "mmlu_pro": 60.0,
             "ifeval": 65.0,
