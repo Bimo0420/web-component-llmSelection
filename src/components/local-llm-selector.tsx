@@ -17,6 +17,7 @@ import {
     ResponsiveContainer,
     Cell,
 } from "recharts"
+import { Eye, BookOpen } from "lucide-react"
 
 type Scenario = "coding" | "chat" | "documents"
 
@@ -29,16 +30,14 @@ const CAPABILITY_RANK = {
 }
 
 // Definition of all available benchmarks
-const ALL_BENCHMARKS: { key: keyof ModelData['benchmarks']; label: string; invert?: boolean; color: string }[] = [
-    { key: "live_code_bench", label: "LiveCodeBench", color: "hsl(var(--chart-1))" },
-    { key: "math_500", label: "Math 500", color: "hsl(var(--chart-2))" },
-    { key: "open_llm_leaderboard_v2", label: "Open LLM V2", color: "hsl(var(--chart-3))" },
-    { key: "ttft_ms", label: "TTFT (ms)", invert: true, color: "hsl(var(--chart-4))" },
-    { key: "la_perf", label: "La Perf", color: "hsl(var(--chart-5))" },
-    { key: "ifeval", label: "IFEval", color: "hsl(var(--chart-1))" },
-    { key: "mmlu_pro", label: "MMLU-Pro", color: "hsl(var(--chart-2))" },
-    { key: "vliga_bench_ru", label: "VLigaBench (RU)", color: "hsl(var(--chart-3))" },
-    { key: "ru_mmlu", label: "Ru-MMLU", color: "hsl(var(--chart-4))" },
+const ALL_BENCHMARKS: { key: keyof ModelData['benchmarks']; label: string; description: string; invert?: boolean; color: string }[] = [
+    { key: "ttft_ms", label: "TTFT (ms)", description: "Скорость реакции — время до генерации первого слова (меньше — лучше).", invert: true, color: "hsl(142, 71%, 45%)" },
+    { key: "la_perf", label: "La Perf", description: "Эффективность работы с длинными документами и RAG.", color: "hsl(142, 71%, 45%)" },
+    { key: "ifeval", label: "IFEval", description: "Способность точно следовать сложным инструкциям и форматам.", color: "hsl(142, 71%, 45%)" },
+    { key: "mmlu_pro", label: "MMLU-Pro", description: "Глубокое понимание профессиональных областей и сложная логика.", color: "hsl(142, 71%, 45%)" },
+    { key: "live_code_bench", label: "LiveCodeBench", description: "Оценка навыков написания кода на реальных задачах.", color: "hsl(142, 71%, 45%)" },
+    { key: "math_500", label: "Math 500", description: "Тест на решение сложных математических задач.", color: "hsl(142, 71%, 45%)" },
+    { key: "open_llm_leaderboard_v2", label: "Open LLM V2", description: "Интегральный показатель знаний и общего качества модели.", color: "hsl(142, 71%, 45%)" },
 ]
 
 // Mapping which benchmarks are relevant for which scenario
@@ -49,281 +48,251 @@ const SCENARIO_RELEVANCE: Record<Scenario, (keyof ModelData['benchmarks'])[]> = 
 }
 
 export function LocalLLMSelector() {
-    const [scenario, setScenario] = React.useState<Scenario>("coding")
-    const [activeTab, setActiveTab] = React.useState<string>("live_code_bench")
+    const [scenario, setScenario] = React.useState<Scenario>("chat")
+    const [activeTab, setActiveTab] = React.useState<string>("ttft_ms")
 
     // Determine relevant benchmarks for the selected scenario
     const relevantBenchmarks = React.useMemo(() => new Set(SCENARIO_RELEVANCE[scenario]), [scenario])
 
     // Calculate which models are "active" (filtered) based on criteria
+    // User requested to remove all filters, so all models are active
     const activeModelIds = React.useMemo(() => {
-        const activeSet = new Set<string>()
-
-        MODELS.forEach(m => {
-            let isActive = false
-            switch (scenario) {
-                case "coding":
-                    isActive = true
-                    break
-                case "chat":
-                    isActive = m.architecture === "MoE"
-                    break
-                case "documents":
-                    isActive = m.context_window >= 128000
-                    break
-            }
-            if (isActive) activeSet.add(m.id)
-        })
-        return activeSet
-    }, [scenario])
+        return new Set(MODELS.map(m => m.id))
+    }, [])
 
     // Filtered models for the card list (only active ones)
     const filteredModelsForCards = React.useMemo(() => {
-        const active = MODELS.filter(m => activeModelIds.has(m.id))
+        const active = [...MODELS]
 
         // Always sort by params (descending)
         active.sort((a, b) => b.params - a.params)
 
         return active
-    }, [activeModelIds])
+    }, [])
 
-    // Data for charts: ALL models
+    // Data for charts: ALL models with grouping headers
     const chartData = React.useMemo(() => {
-        return MODELS.map(m => {
-            const dataPoint: any = {
-                name: m.name,
-                isActive: activeModelIds.has(m.id),
-                params: m.params,
-                ...m.benchmarks
-            }
-            return dataPoint
-        }).sort((a, b) => b.params - a.params)
-    }, [activeModelIds])
+        const sorted = [...MODELS].sort((a, b) => b.params - a.params);
+        const result: any[] = [];
+
+        const large = sorted.filter(m => m.params >= 40);
+        const small = sorted.filter(m => m.params < 40);
+
+        if (large.length > 0) {
+            result.push({
+                name: "HEADER_LARGE",
+                isHeader: true,
+                headerLabel: "Средние и Крупные (>40B)"
+            });
+            result.push(...large.map(m => ({
+                ...m,
+                ...m.benchmarks,
+                isActive: true,
+            })));
+        }
+
+        if (small.length > 0) {
+            result.push({
+                name: "HEADER_SMALL",
+                isHeader: true,
+                headerLabel: "Малые модели (<40B)"
+            });
+            result.push(...small.map(m => ({
+                ...m,
+                ...m.benchmarks,
+                isActive: true,
+            })));
+        }
+        return result;
+    }, [])
+
+    const CustomYAxisTick = (props: any) => {
+        const { x, y, payload } = props;
+        const dataPoint = chartData.find(d => d.name === payload.value);
+        if (!dataPoint) return null;
+
+        if (dataPoint.isHeader) {
+            return (
+                <g transform={`translate(${x},${y})`}>
+                    <text x={10} y={0} dy={4} textAnchor="start" fontSize={10} fontWeight="700" fill="hsl(var(--muted-foreground))" className="uppercase tracking-widest opacity-60">
+                        {dataPoint.headerLabel}
+                    </text>
+                </g>
+            );
+        }
+
+        return (
+            <g transform={`translate(${x},${y})`}>
+                <foreignObject x={-175} y={-12} width={175} height={24}>
+                    <div className="flex items-center justify-end gap-1.5 h-full px-2">
+                        <div className="flex items-center gap-1 shrink-0">
+                            {dataPoint.architecture === 'MoE' && (
+                                <span className="text-[7px] font-bold text-purple-600 bg-purple-500/10 px-0.5 rounded leading-tight border border-purple-500/20">MoE</span>
+                            )}
+                            {dataPoint.vision && (
+                                <Eye className="h-3 w-3 text-amber-500" />
+                            )}
+                            {dataPoint.context_window >= 128000 && (
+                                <div className="flex items-center gap-0.5">
+                                    <BookOpen className="h-3 w-3 text-blue-500 shrink-0" />
+                                    {dataPoint.context_window >= 256000 && (
+                                        <BookOpen className="h-3 w-3 text-blue-500 shrink-0" />
+                                    )}
+                                    {dataPoint.context_window >= 1000000 && (
+                                        <BookOpen className="h-3 w-3 text-blue-500 shrink-0" />
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                        <span className="text-[10px] font-medium truncate text-foreground leading-none">
+                            {dataPoint.name}
+                        </span>
+                    </div>
+                </foreignObject>
+            </g>
+        );
+    };
 
     return (
-        <div className="flex flex-col gap-8 w-full max-w-7xl mx-auto p-4 sm:p-6 text-foreground">
-            <div className="flex flex-col gap-2 text-center sm:text-left">
-                <h2 className="text-3xl font-bold tracking-tight">Выбор Локальной LLM</h2>
-                <p className="text-muted-foreground">
-                    Сравнение всех моделей. Выберите сценарий, чтобы подсветить оптимальные варианты.
-                </p>
-            </div>
-
-            {/* Part 1: Scenario Selection */}
-            <div className="flex flex-col gap-3">
-                <label className="text-sm font-medium text-muted-foreground uppercase tracking-wider">1. Сценарий использования</label>
-                <Tabs value={scenario} onValueChange={(v) => setScenario(v as Scenario)} className="w-full">
-                    <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3 h-auto p-1 bg-muted/50 rounded-xl">
-                        <TabsTrigger className="py-3 rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all" value="coding">
-                            <span className="font-semibold">Сложный Кодинг / Математика</span>
-                        </TabsTrigger>
-                        <TabsTrigger className="py-3 rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all" value="chat">
-                            <span className="font-semibold">High-Load Чат-бот</span>
-                        </TabsTrigger>
-                        <TabsTrigger className="py-3 rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all" value="documents">
-                            <span className="font-semibold">Анализ Больших Архивов</span>
-                        </TabsTrigger>
-                    </TabsList>
-                </Tabs>
-            </div>
-
-            {/* Part 2: Charts per Benchmark */}
-            <div className="flex flex-col gap-3">
-                <div className="flex justify-between items-center">
-                    <label className="text-sm font-medium text-muted-foreground uppercase tracking-wider">2. Аналитика бенчмарков</label>
+        <div className="flex flex-col gap-4 w-full max-w-7xl mx-auto p-4 sm:p-6 text-foreground">
+            {/* Compact Header & Toolbar */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-muted/30 p-2 rounded-2xl border border-border/50">
+                <div className="flex items-center gap-2 pl-2">
+                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    <h2 className="text-sm font-bold uppercase tracking-tighter">LLM Selector</h2>
                 </div>
 
-                <Card className="border-none shadow-sm bg-transparent">
-                    <CardContent className="p-0">
-                        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                            <TabsList className="flex flex-wrap h-auto gap-2 bg-transparent justify-start mb-6 w-full overflow-x-auto pb-2 no-scrollbar">
-                                {ALL_BENCHMARKS.map(b => {
-                                    const isRelevant = relevantBenchmarks.has(b.key)
-                                    return (
-                                        <TabsTrigger
-                                            key={b.key}
-                                            value={b.key}
-                                            className={cn(
-                                                "border transition-all px-4 py-2 rounded-full",
-                                                isRelevant
-                                                    ? "border-primary/50 bg-primary/10 text-primary hover:bg-primary/20 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-                                                    : "border-transparent bg-muted/50 text-muted-foreground hover:bg-muted data-[state=active]:bg-foreground data-[state=active]:text-background"
-                                            )}
-                                        >
-                                            {b.label}
-                                            {isRelevant && <span className="ml-2 inline-block w-1.5 h-1.5 rounded-full bg-current animate-pulse" />}
-                                        </TabsTrigger>
-                                    )
-                                })}
-                            </TabsList>
+                <div className="flex flex-wrap items-center gap-2">
+                    {/* Scenario Toggle Group */}
+                    <div className="flex bg-background/50 p-1 rounded-xl border border-border/40 shadow-sm">
+                        {(["chat", "documents", "coding"] as Scenario[]).map((s) => (
+                            <button
+                                key={s}
+                                onClick={() => setScenario(s)}
+                                className={cn(
+                                    "px-3 py-1.5 text-xs font-semibold rounded-lg transition-all",
+                                    scenario === s
+                                        ? "bg-emerald-500 text-white shadow-md scale-[1.02]"
+                                        : "text-muted-foreground hover:text-foreground"
+                                )}
+                            >
+                                {s === 'coding' ? 'Кодинг' : s === 'chat' ? 'Чат' : 'Документы'}
+                            </button>
+                        ))}
+                    </div>
 
-                            {ALL_BENCHMARKS.map(benchmark => (
-                                <TabsContent key={benchmark.key} value={benchmark.key} className="mt-0">
-                                    <Card className="border shadow-sm">
-                                        <CardHeader>
-                                            <CardTitle>{benchmark.label}</CardTitle>
-                                            <CardDescription>
-                                                Серым цветом выделены модели, не подходящие под выбранный сценарий <b>{
-                                                    scenario === 'coding' ? 'Кодинг' :
-                                                        scenario === 'chat' ? 'Чат' : 'Документы'
-                                                }</b>.
-                                                {benchmark.invert && " (Меньше — лучше)"}
-                                            </CardDescription>
-                                        </CardHeader>
-                                        <CardContent className="h-[500px] w-full pt-2">
-                                            <ResponsiveContainer width="100%" height="100%">
-                                                <BarChart
-                                                    layout="vertical"
-                                                    data={chartData}
-                                                    margin={{ top: 5, right: 30, left: 120, bottom: 5 }}
-                                                    barCategoryGap="15%"
-                                                >
-                                                    <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={true} stroke="hsl(var(--border))" opacity={0.5} />
-                                                    <XAxis type="number" stroke="hsl(var(--muted-foreground))" fontSize={11} tickLine={false} axisLine={false} />
-                                                    <YAxis
-                                                        dataKey="name"
-                                                        type="category"
-                                                        width={170}
-                                                        stroke="hsl(var(--foreground))"
-                                                        fontSize={11}
-                                                        fontWeight={500}
-                                                        tickLine={false}
-                                                        axisLine={false}
-                                                        interval={0}
-                                                    />
-                                                    <Tooltip
-                                                        cursor={{ fill: 'hsl(var(--accent))', opacity: 0.2 }}
-                                                        contentStyle={{ borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', border: 'none', backgroundColor: 'hsl(var(--popover))', color: 'hsl(var(--popover-foreground))' }}
-                                                    />
-                                                    <Bar
-                                                        dataKey={benchmark.key}
-                                                        name={benchmark.label}
-                                                        radius={[0, 4, 4, 0]}
-                                                        barSize={24}
-                                                    >
-                                                        {chartData.map((entry, index) => (
-                                                            <Cell
-                                                                key={`cell-${index}`}
-                                                                fill={entry.isActive ? benchmark.color : "hsl(var(--muted-foreground))"}
-                                                                fillOpacity={entry.isActive ? 1 : 0.3}
-                                                            />
-                                                        ))}
-                                                    </Bar>
-                                                </BarChart>
-                                            </ResponsiveContainer>
-                                        </CardContent>
-                                    </Card>
-                                </TabsContent>
-                            ))}
-                        </Tabs>
-                    </CardContent>
-                </Card>
+                    <div className="h-4 w-px bg-border/60 mx-1 hidden md:block" />
+
+                    {/* Benchmark Pills */}
+                    <div className="flex flex-wrap gap-1.5">
+                        {ALL_BENCHMARKS.map(b => {
+                            const isRelevant = relevantBenchmarks.has(b.key)
+                            return (
+                                <button
+                                    key={b.key}
+                                    onClick={() => setActiveTab(b.key)}
+                                    className={cn(
+                                        "px-2.5 py-1.5 text-[11px] font-medium rounded-lg border transition-all flex items-center gap-1.5",
+                                        activeTab === b.key
+                                            ? "bg-foreground text-background border-foreground shadow-sm"
+                                            : isRelevant
+                                                ? "bg-emerald-500/5 text-emerald-600 border-emerald-500/20 hover:bg-emerald-500/10"
+                                                : "bg-transparent text-muted-foreground border-transparent hover:border-border/50 hover:bg-muted/50"
+                                    )}
+                                >
+                                    {b.label}
+                                    {isRelevant && activeTab !== b.key && <div className="w-1 h-1 rounded-full bg-emerald-500" />}
+                                </button>
+                            )
+                        })}
+                    </div>
+                </div>
             </div>
 
-            {/* Filtered List */}
-            <div className="flex flex-col gap-4">
-                <label className="text-sm font-medium text-muted-foreground uppercase tracking-wider">3. Рекомендуемые модели ({filteredModelsForCards.length})</label>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
-                    {filteredModelsForCards.map((model, index) => (
-                        <ModelCard key={model.id} model={model} rank={index + 1} scenario={scenario} />
-                    ))}
-                    {filteredModelsForCards.length === 0 && (
-                        <div className="col-span-full text-center py-12 text-muted-foreground bg-muted/10 border-dashed border-2 rounded-xl">
-                            Нет моделей, идеально подходящих под фильтры сценария.
-                            <br />
-                            Посмотрите на диаграмму выше, чтобы выбрать ближайший аналог.
+            {/* Main Content Area */}
+            <div className="mt-2">
+                {ALL_BENCHMARKS.filter(b => b.key === activeTab).map(benchmark => (
+                    <Card key={benchmark.key} className="border shadow-sm overflow-hidden bg-card/50 backdrop-blur-sm">
+                        <div className="px-4 py-3 border-b border-border/50 bg-muted/20 flex justify-between items-center">
+                            <div>
+                                <h3 className="text-sm font-bold flex items-center gap-2">
+                                    <span className="w-1.5 h-3 bg-emerald-500 rounded-full" />
+                                    {benchmark.label}
+                                </h3>
+                                <p className="text-[10px] text-muted-foreground mt-0.5">{benchmark.description}</p>
+                            </div>
                         </div>
-                    )}
-                </div>
+                        <CardContent className="h-[480px] w-full p-2">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <BarChart
+                                    layout="vertical"
+                                    data={chartData}
+                                    margin={{ top: 5, right: 30, left: 120, bottom: 5 }}
+                                    barCategoryGap="15%"
+                                >
+                                    <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={true} stroke="hsl(var(--border))" opacity={0.5} />
+                                    <XAxis type="number" stroke="hsl(var(--muted-foreground))" fontSize={11} tickLine={false} axisLine={false} />
+                                    <YAxis
+                                        dataKey="name"
+                                        type="category"
+                                        width={175}
+                                        stroke="hsl(var(--foreground))"
+                                        fontSize={11}
+                                        fontWeight={500}
+                                        tickLine={false}
+                                        axisLine={false}
+                                        interval={0}
+                                        tick={<CustomYAxisTick />}
+                                    />
+                                    <Tooltip
+                                        cursor={{ fill: 'hsl(var(--accent))', opacity: 0.2 }}
+                                        contentStyle={{ borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', border: 'none', backgroundColor: 'hsl(var(--popover))', color: 'hsl(var(--popover-foreground))' }}
+                                    />
+                                    <Bar
+                                        dataKey={benchmark.key}
+                                        name={benchmark.label}
+                                        radius={[0, 4, 4, 0]}
+                                        barSize={24}
+                                    >
+                                        {chartData.map((entry, index) => {
+                                            if (entry.isHeader) return <Cell key={`cell-${index}`} fill="transparent" />;
+
+                                            const value = entry[benchmark.key];
+                                            if (value === undefined) return <Cell key={`cell-${index}`} fill="transparent" />;
+
+                                            // Calculate relative performance for color intensity
+                                            const allValues = chartData.filter(d => !d.isHeader && d[benchmark.key] !== undefined).map(d => d[benchmark.key]);
+                                            const min = Math.min(...allValues);
+                                            const max = Math.max(...allValues);
+
+                                            let intensity = 0.3; // base opacity
+                                            if (max !== min) {
+                                                const normalized = (value - min) / (max - min);
+                                                intensity = benchmark.invert ? (1 - normalized) : normalized;
+                                            } else {
+                                                intensity = 1;
+                                            }
+
+                                            // Map intensity to opacity (0.4 to 1.0) for better visibility
+                                            const opacity = 0.4 + (intensity * 0.6);
+
+                                            return (
+                                                <Cell
+                                                    key={`cell-${index}`}
+                                                    fill={benchmark.color}
+                                                    fillOpacity={opacity}
+                                                />
+                                            );
+                                        })}
+                                    </Bar>
+                                </BarChart>
+                            </ResponsiveContainer>
+                        </CardContent>
+                    </Card>
+                ))}
             </div>
         </div>
     )
-}
-
-function ModelCard({ model, rank, scenario }: { model: ModelData; rank: number; scenario: Scenario }) {
-    const isTopPick = rank === 1
-
-    return (
-        <Card className={cn("flex flex-col overflow-hidden transition-all hover:shadow-lg border bg-card group", isTopPick && "border-primary/50 ring-1 ring-primary/20 shadow-md")}>
-            <CardHeader className="pb-3">
-                <div className="flex justify-between items-start gap-2">
-                    <div>
-                        <CardTitle className="text-xl group-hover:text-primary transition-colors">{model.name}</CardTitle>
-                        <CardDescription className="flex items-center gap-2 mt-1 font-mono text-xs">
-                            <Badge variant="outline" className="rounded-sm font-normal text-muted-foreground border-border bg-muted/20">
-                                {model.params}B
-                            </Badge>
-                            <span className="text-muted-foreground/50 text-[10px]">●</span>
-                            <span className="text-muted-foreground">{model.architecture}</span>
-                        </CardDescription>
-                    </div>
-                    {isTopPick && <Badge variant="default" className="bg-primary hover:bg-primary shadow-sm">Choice #1</Badge>}
-                </div>
-            </CardHeader>
-
-            <CardContent className="flex-1 pb-3">
-                <div className="flex flex-col gap-4">
-                    <div className="flex justify-between items-center text-sm border-b border-border/50 pb-2 border-dashed">
-                        <span className="text-muted-foreground text-xs uppercase tracking-wide">Context Window</span>
-                        <span className="font-semibold font-mono">{(model.context_window / 1000).toLocaleString()}k</span>
-                    </div>
-
-                    <ScenarioBenchmarks model={model} scenario={scenario} />
-
-                </div>
-            </CardContent>
-
-            <CardFooter className="pt-2 pb-4 border-t bg-muted/5 mt-auto">
-                <div className="flex flex-wrap gap-1.5 w-full">
-                    {/* Always show key metrics badges */}
-                    <div className="flex gap-1.5 flex-wrap">
-                        {model.capabilities.coding === 'Excellent' &&
-                            <Badge variant="secondary" className="text-[10px] bg-green-500/10 text-green-700 dark:text-green-400 hover:bg-green-500/20 border-green-500/20">Coding ⭐</Badge>
-                        }
-                        {model.capabilities.reasoning === 'Excellent' &&
-                            <Badge variant="secondary" className="text-[10px] bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 hover:bg-indigo-500/20 border-indigo-500/20">Reasoning</Badge>
-                        }
-                        {model.capabilities.reasoning === 'Think Mode' &&
-                            <Badge variant="secondary" className="text-[10px] bg-purple-500/10 text-purple-700 dark:text-purple-400 hover:bg-purple-500/20 border-purple-500/20">Think Mode 🧠</Badge>
-                        }
-                        {model.architecture === 'MoE' &&
-                            <Badge variant="secondary" className="text-[10px] bg-amber-500/10 text-amber-700 dark:text-amber-400 hover:bg-amber-500/20 border-amber-500/20">MoE</Badge>
-                        }
-                    </div>
-                </div>
-            </CardFooter>
-        </Card>
-    )
-}
-
-function ScenarioBenchmarks({ model, scenario }: { model: ModelData; scenario: Scenario }) {
-    const b = model.benchmarks
-
-    if (scenario === "coding") {
-        return (
-            <div className="space-y-2">
-                <MetricRow label="LiveCodeBench" value={b.live_code_bench} max={100} />
-                <MetricRow label="Math 500" value={b.math_500} max={100} />
-            </div>
-        )
-    }
-    if (scenario === "chat") {
-        return (
-            <div className="space-y-2">
-                <MetricRow label="TTFT" value={b.ttft_ms} unit="ms" invert />
-                <MetricRow label="La Perf" value={b.la_perf} max={100} />
-            </div>
-        )
-    }
-    if (scenario === "documents") {
-        return (
-            <div className="space-y-2">
-                <MetricRow label="IFEval" value={b.ifeval} max={100} />
-                <MetricRow label="MMLU-Pro" value={b.mmlu_pro} max={100} />
-            </div>
-        )
-    }
-    return null
 }
 
 function MetricRow({ label, value, max = 100, invert = false, unit = '' }: { label: string; value?: number; max?: number; invert?: boolean; unit?: string }) {
@@ -345,14 +314,5 @@ function MetricRow({ label, value, max = 100, invert = false, unit = '' }: { lab
             <span className="text-muted-foreground">{label}</span>
             <span className={cn("font-medium font-mono", colorClass)}>{value}{unit}</span>
         </div>
-    )
-}
-
-function BenchmarkBadge({ label, value, text }: { label: string; value?: number; text?: string }) {
-    if (value === undefined && !text) return null
-    return (
-        <Badge variant="secondary" className="px-1.5 py-0.5 text-[10px] font-normal text-muted-foreground bg-secondary/50">
-            {label}: {text || value}
-        </Badge>
     )
 }
