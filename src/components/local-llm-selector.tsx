@@ -119,13 +119,13 @@ export function LocalLLMSelector() {
                     <div className="flex items-center justify-end gap-1.5 h-full px-2">
                         <div className="flex items-center gap-1 shrink-0">
                             {(dataPoint.architecture === 'MoE' || dataPoint.architecture === 'Hybrid MoE' || dataPoint.architecture === 'Hybrid Linear') && (
-                                <span className="text-[7px] font-bold text-purple-600 bg-purple-500/10 px-0.5 rounded leading-tight border border-purple-500/20">{dataPoint.architecture === 'MoE' ? 'MoE' : 'Hybrid'}</span>
+                                <span className="text-[7px] font-bold text-green-700 bg-green-500/10 px-0.5 rounded leading-tight border border-green-500/20">{dataPoint.architecture === 'MoE' ? 'MoE' : 'Hybrid'}</span>
                             )}
                             {dataPoint.reasoning && (
                                 <Brain className="h-3 w-3 text-pink-500" />
                             )}
                             {dataPoint.open_source === 'Open Source' && (
-                                <Unlock className="h-3 w-3 text-green-500" />
+                                <Unlock className="h-3 w-3 text-foreground" />
                             )}
                             {dataPoint.visual && (
                                 <Eye className="h-3 w-3 text-amber-500" />
@@ -226,7 +226,7 @@ export function LocalLLMSelector() {
                                     <span>Reasoning</span>
                                 </div>
                                 <div className="flex items-center gap-1">
-                                    <Unlock className="h-3 w-3 text-green-500" />
+                                    <Unlock className="h-3 w-3 text-foreground" />
                                     <span>Open Source</span>
                                 </div>
                                 <div className="flex items-center gap-1">
