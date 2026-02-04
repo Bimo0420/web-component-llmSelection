@@ -17,7 +17,7 @@ import {
     ResponsiveContainer,
     Cell,
 } from "recharts"
-import { Eye, BookOpen } from "lucide-react"
+import { Eye, BookOpen, Brain, Unlock } from "lucide-react"
 
 type Scenario = "coding" | "chat" | "documents"
 
@@ -121,6 +121,12 @@ export function LocalLLMSelector() {
                             {(dataPoint.architecture === 'MoE' || dataPoint.architecture === 'Hybrid MoE' || dataPoint.architecture === 'Hybrid Linear') && (
                                 <span className="text-[7px] font-bold text-purple-600 bg-purple-500/10 px-0.5 rounded leading-tight border border-purple-500/20">{dataPoint.architecture === 'MoE' ? 'MoE' : 'Hybrid'}</span>
                             )}
+                            {dataPoint.reasoning && (
+                                <Brain className="h-3 w-3 text-pink-500" />
+                            )}
+                            {dataPoint.open_source === 'Open Source' && (
+                                <Unlock className="h-3 w-3 text-green-500" />
+                            )}
                             {dataPoint.visual && (
                                 <Eye className="h-3 w-3 text-amber-500" />
                             )}
@@ -212,6 +218,25 @@ export function LocalLLMSelector() {
                                     {benchmark.label}
                                 </h3>
                                 <p className="text-[10px] text-muted-foreground mt-0.5">{benchmark.description}</p>
+                            </div>
+                            {/* Legend */}
+                            <div className="flex items-center gap-3 text-[9px] text-muted-foreground">
+                                <div className="flex items-center gap-1">
+                                    <Brain className="h-3 w-3 text-pink-500" />
+                                    <span>Reasoning</span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                    <Unlock className="h-3 w-3 text-green-500" />
+                                    <span>Open Source</span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                    <Eye className="h-3 w-3 text-amber-500" />
+                                    <span>Visual</span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                    <BookOpen className="h-3 w-3 text-blue-500" />
+                                    <span>Long Context</span>
+                                </div>
                             </div>
                         </div>
                         <CardContent className="h-[480px] w-full p-2">
