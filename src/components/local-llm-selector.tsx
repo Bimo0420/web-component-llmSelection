@@ -19,32 +19,19 @@ import {
 } from "recharts"
 import { Eye, BookOpen, Brain, Unlock } from "lucide-react"
 
-type Scenario = "coding" | "chat" | "documents"
-
 // Definition of all available benchmarks
-const ALL_BENCHMARKS: { key: keyof ModelData['benchmarks']; label: string; description: string; invert?: boolean; color: string }[] = [
-    { key: "aa_lcr", label: "AA-LCR", description: "Long Context Reasoning — способность работать с длинным контекстом и рассуждать.", color: "hsl(142, 71%, 45%)" },
-    { key: "aa_omniscience_accuracy", label: "AA Accuracy", description: "Точность ответов модели на основе всезнания.", color: "hsl(200, 71%, 45%)" },
-    { key: "aa_omniscience_non_hallucination", label: "AA Non-Hallucination", description: "Способность избегать галлюцинаций в ответах.", color: "hsl(280, 71%, 45%)" },
-    { key: "hle", label: "HLE", description: "Humanity's Last Exam — сложный экзамен на общие знания.", color: "hsl(30, 71%, 45%)" },
-    { key: "gpqa_diamond", label: "GPQA Diamond", description: "Graduate-level Physics Question Answering — физика на уровне аспирантуры.", color: "hsl(260, 71%, 45%)" },
-    { key: "ifbench", label: "IFBench", description: "Instruction Following Benchmark — следование инструкциям.", color: "hsl(180, 71%, 45%)" },
-    { key: "mmmu_pro", label: "MMMU Pro", description: "Multimodal Understanding — визуальное рассуждение и понимание.", color: "hsl(320, 71%, 45%)" },
+type BenchmarkKey = keyof ModelData['benchmarks'] | 'speed';
+
+const ALL_BENCHMARKS: { key: BenchmarkKey; label: string; description: string; invert?: boolean; color: string }[] = [
+    { key: "aa_lcr", label: "Анализ", description: "AA LCR (Long Context Reasoning) — способность работать с длинным контекстом и рассуждать.", color: "hsl(142, 71%, 45%)" },
+    { key: "aa_omniscience_accuracy", label: "Точность", description: "AA Omniscience Accuracy — оценка того, насколько точно модель извлекает факты.", color: "hsl(200, 71%, 45%)" },
+    { key: "aa_omniscience_non_hallucination", label: "Галлюцинации", description: "AA Omniscience Non-Hallucination — способность избегать галлюцинаций в ответах.", color: "hsl(280, 71%, 45%)" },
+    { key: "ifbench", label: "Исполнительность", description: "IFBench (Instruction Following Benchmark) — тест проверяет не знания, а «послушность» и точность выполнения инструкций.", color: "hsl(180, 71%, 45%)" },
+    { key: "speed", label: "Скорость", description: "Скорость генерации ответа (t/s)", color: "hsl(45, 71%, 45%)" },
 ]
 
-// Mapping which benchmarks are relevant for which scenario
-const SCENARIO_RELEVANCE: Record<Scenario, (keyof ModelData['benchmarks'])[]> = {
-    coding: ["ifbench", "gpqa_diamond", "aa_lcr"],
-    chat: ["aa_omniscience_non_hallucination", "hle"],
-    documents: ["aa_lcr", "aa_omniscience_accuracy"],
-}
-
 export function LocalLLMSelector() {
-    const [scenario, setScenario] = React.useState<Scenario>("chat")
     const [activeTab, setActiveTab] = React.useState<string>("aa_lcr")
-
-    // Determine relevant benchmarks for the selected scenario
-    const relevantBenchmarks = React.useMemo(() => new Set(SCENARIO_RELEVANCE[scenario]), [scenario])
 
     // Calculate which models are "active" (filtered) based on criteria
     // User requested to remove all filters, so all models are active
@@ -161,30 +148,9 @@ export function LocalLLMSelector() {
                 </div>
 
                 <div className="flex flex-wrap items-center gap-2">
-                    {/* Scenario Toggle Group */}
-                    <div className="flex bg-background/50 p-1 rounded-xl border border-border/40 shadow-sm">
-                        {(["chat", "documents", "coding"] as Scenario[]).map((s) => (
-                            <button
-                                key={s}
-                                onClick={() => setScenario(s)}
-                                className={cn(
-                                    "px-3 py-1.5 text-xs font-semibold rounded-lg transition-all",
-                                    scenario === s
-                                        ? "bg-emerald-500 text-white shadow-md scale-[1.02]"
-                                        : "text-muted-foreground hover:text-foreground"
-                                )}
-                            >
-                                {s === 'coding' ? 'Кодинг' : s === 'chat' ? 'Чат' : 'Документы'}
-                            </button>
-                        ))}
-                    </div>
-
-                    <div className="h-4 w-px bg-border/60 mx-1 hidden md:block" />
-
                     {/* Benchmark Pills */}
                     <div className="flex flex-wrap gap-1.5">
                         {ALL_BENCHMARKS.map(b => {
-                            const isRelevant = relevantBenchmarks.has(b.key)
                             return (
                                 <button
                                     key={b.key}
@@ -193,13 +159,10 @@ export function LocalLLMSelector() {
                                         "px-2.5 py-1.5 text-[11px] font-medium rounded-lg border transition-all flex items-center gap-1.5",
                                         activeTab === b.key
                                             ? "bg-foreground text-background border-foreground shadow-sm"
-                                            : isRelevant
-                                                ? "bg-emerald-500/5 text-emerald-600 border-emerald-500/20 hover:bg-emerald-500/10"
-                                                : "bg-transparent text-muted-foreground border-transparent hover:border-border/50 hover:bg-muted/50"
+                                            : "bg-transparent text-muted-foreground border-transparent hover:border-border/50 hover:bg-muted/50"
                                     )}
                                 >
                                     {b.label}
-                                    {isRelevant && activeTab !== b.key && <div className="w-1 h-1 rounded-full bg-emerald-500" />}
                                 </button>
                             )
                         })}
@@ -239,7 +202,7 @@ export function LocalLLMSelector() {
                                 </div>
                             </div>
                         </div>
-                        <CardContent className="h-[480px] w-full p-2">
+                        <CardContent className="h-[662px] w-full p-2">
                             <ResponsiveContainer width="100%" height="100%">
                                 <BarChart
                                     layout="vertical"
