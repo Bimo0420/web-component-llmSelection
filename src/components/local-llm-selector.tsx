@@ -17,7 +17,7 @@ import {
     ResponsiveContainer,
     Cell,
 } from "recharts"
-import { Eye, BookOpen, Brain, Unlock } from "lucide-react"
+import { Eye, BookOpen, Brain, Unlock, ArrowUpDown, ArrowDownUp } from "lucide-react"
 
 // Definition of all available benchmarks
 type BenchmarkKey = keyof ModelData['benchmarks'] | 'speed';
@@ -32,6 +32,7 @@ const ALL_BENCHMARKS: { key: BenchmarkKey; label: string; description: string; i
 
 export function LocalLLMSelector() {
     const [activeTab, setActiveTab] = React.useState<string>("aa_lcr")
+    const [sortByValue, setSortByValue] = React.useState<boolean>(false)
 
     // Calculate which models are "active" (filtered) based on criteria
     // User requested to remove all filters, so all models are active
@@ -54,8 +55,22 @@ export function LocalLLMSelector() {
         const sorted = [...MODELS].sort((a, b) => b.params - a.params);
         const result: any[] = [];
 
-        const large = sorted.filter(m => m.params >= 40);
-        const small = sorted.filter(m => m.params < 40);
+        let large = sorted.filter(m => m.params >= 40);
+        let small = sorted.filter(m => m.params < 40);
+
+        // Sort by benchmark value if sortByValue is true
+        if (sortByValue) {
+            const sortFn = (a: any, b: any) => {
+                const aVal = activeTab === 'speed' ? a.speed : a.benchmarks[activeTab];
+                const bVal = activeTab === 'speed' ? b.speed : b.benchmarks[activeTab];
+                if (aVal === undefined && bVal === undefined) return 0;
+                if (aVal === undefined) return 1;
+                if (bVal === undefined) return -1;
+                return bVal - aVal; // descending
+            };
+            large = large.sort(sortFn);
+            small = small.sort(sortFn);
+        }
 
         if (large.length > 0) {
             result.push({
@@ -83,7 +98,7 @@ export function LocalLLMSelector() {
             })));
         }
         return result;
-    }, [])
+    }, [sortByValue, activeTab])
 
     const CustomYAxisTick = (props: any) => {
         const { x, y, payload } = props;
@@ -182,23 +197,39 @@ export function LocalLLMSelector() {
                                 </h3>
                                 <p className="text-[10px] text-muted-foreground mt-0.5">{benchmark.description}</p>
                             </div>
-                            {/* Legend */}
-                            <div className="flex items-center gap-3 text-[9px] text-muted-foreground">
-                                <div className="flex items-center gap-1">
-                                    <Brain className="h-3 w-3 text-pink-500" />
-                                    <span>Reasoning</span>
-                                </div>
-                                <div className="flex items-center gap-1">
-                                    <Unlock className="h-3 w-3 text-foreground" />
-                                    <span>Open Source</span>
-                                </div>
-                                <div className="flex items-center gap-1">
-                                    <Eye className="h-3 w-3 text-amber-500" />
-                                    <span>Visual</span>
-                                </div>
-                                <div className="flex items-center gap-1">
-                                    <BookOpen className="h-3 w-3 text-blue-500" />
-                                    <span>Long Context</span>
+                            <div className="flex items-center gap-4">
+                                {/* Sort Button */}
+                                <button
+                                    onClick={() => setSortByValue(!sortByValue)}
+                                    className={cn(
+                                        "flex items-center gap-1.5 px-2.5 py-1.5 text-[10px] font-medium rounded-lg border transition-all",
+                                        sortByValue
+                                            ? "bg-emerald-500 text-white border-emerald-500 shadow-sm"
+                                            : "bg-background/50 text-muted-foreground border-border/40 hover:border-border hover:bg-muted/50"
+                                    )}
+                                    title={sortByValue ? "Сортировка по значению" : "Сортировка по размеру"}
+                                >
+                                    {sortByValue ? <ArrowDownUp className="h-3 w-3" /> : <ArrowUpDown className="h-3 w-3" />}
+                                    <span>{sortByValue ? "По значению" : "По размеру"}</span>
+                                </button>
+                                {/* Legend */}
+                                <div className="flex items-center gap-3 text-[9px] text-muted-foreground">
+                                    <div className="flex items-center gap-1">
+                                        <Brain className="h-3 w-3 text-pink-500" />
+                                        <span>Reasoning</span>
+                                    </div>
+                                    <div className="flex items-center gap-1">
+                                        <Unlock className="h-3 w-3 text-foreground" />
+                                        <span>Open Source</span>
+                                    </div>
+                                    <div className="flex items-center gap-1">
+                                        <Eye className="h-3 w-3 text-amber-500" />
+                                        <span>Visual</span>
+                                    </div>
+                                    <div className="flex items-center gap-1">
+                                        <BookOpen className="h-3 w-3 text-blue-500" />
+                                        <span>Long Context</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
