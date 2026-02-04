@@ -17,7 +17,7 @@ import {
     ResponsiveContainer,
     Cell,
 } from "recharts"
-import { Eye, BookOpen, Brain, Unlock, ArrowUpDown, ArrowDownUp } from "lucide-react"
+import { Eye, BookOpen, Brain, Unlock, ArrowUpDown, ArrowDownUp, Network } from "lucide-react"
 
 // Definition of all available benchmarks
 type BenchmarkKey = keyof ModelData['benchmarks'] | 'speed';
@@ -121,7 +121,9 @@ export function LocalLLMSelector() {
                     <div className="flex items-center justify-end gap-1.5 h-full px-2">
                         <div className="flex items-center gap-1 shrink-0">
                             {(dataPoint.architecture === 'MoE' || dataPoint.architecture === 'Hybrid MoE' || dataPoint.architecture === 'Hybrid Linear') && (
-                                <span className="text-[7px] font-bold text-green-700 bg-green-500/10 px-0.5 rounded leading-tight border border-green-500/20">{dataPoint.architecture === 'MoE' ? 'MoE' : 'Hybrid'}</span>
+                                <div className="flex items-center justify-center text-green-700 bg-green-500/10 px-0.5 rounded border border-green-500/20">
+                                    <Network className="h-2.5 w-2.5" />
+                                </div>
                             )}
                             {dataPoint.reasoning && (
                                 <Brain className="h-3 w-3 text-pink-500" />
@@ -214,6 +216,10 @@ export function LocalLLMSelector() {
                                 </button>
                                 {/* Legend */}
                                 <div className="flex items-center gap-3 text-[9px] text-muted-foreground">
+                                    <div className="flex items-center gap-1">
+                                        <Network className="h-3 w-3 text-green-700" />
+                                        <span>MoE/Hybrid</span>
+                                    </div>
                                     <div className="flex items-center gap-1">
                                         <Brain className="h-3 w-3 text-pink-500" />
                                         <span>Reasoning</span>
