@@ -33,9 +33,19 @@ const ALL_BENCHMARKS: { key: BenchmarkKey; label: string; description: string; i
 export function LocalLLMSelector() {
     const [activeTab, setActiveTab] = React.useState<string>("aa_lcr")
     const [sortByValue, setSortByValue] = React.useState<boolean>(false)
+    const [filters, setFilters] = React.useState({
+        moeHybrid: false,
+        reasoning: false,
+        openSource: false,
+        visual: false,
+        longContext: false,
+    })
+
+    const toggleFilter = (filterKey: keyof typeof filters) => {
+        setFilters(prev => ({ ...prev, [filterKey]: !prev[filterKey] }))
+    }
 
     // Calculate which models are "active" (filtered) based on criteria
-    // User requested to remove all filters, so all models are active
     const activeModelIds = React.useMemo(() => {
         return new Set(MODELS.map(m => m.id))
     }, [])
@@ -52,7 +62,30 @@ export function LocalLLMSelector() {
 
     // Data for charts: ALL models with grouping headers
     const chartData = React.useMemo(() => {
-        const sorted = [...MODELS].sort((a, b) => b.params - a.params);
+        let filtered = [...MODELS];
+
+        // Apply filters
+        if (filters.moeHybrid) {
+            filtered = filtered.filter(m =>
+                m.architecture === 'MoE' ||
+                m.architecture === 'Hybrid MoE' ||
+                m.architecture === 'Hybrid Linear'
+            );
+        }
+        if (filters.reasoning) {
+            filtered = filtered.filter(m => m.reasoning);
+        }
+        if (filters.openSource) {
+            filtered = filtered.filter(m => m.open_source === 'Open Source');
+        }
+        if (filters.visual) {
+            filtered = filtered.filter(m => m.visual);
+        }
+        if (filters.longContext) {
+            filtered = filtered.filter(m => m.context_window >= 128);
+        }
+
+        const sorted = filtered.sort((a, b) => b.params - a.params);
         const result: any[] = [];
 
         let large = sorted.filter(m => m.params >= 40);
@@ -98,7 +131,7 @@ export function LocalLLMSelector() {
             })));
         }
         return result;
-    }, [sortByValue, activeTab])
+    }, [sortByValue, activeTab, filters])
 
     const CustomYAxisTick = (props: any) => {
         const { x, y, payload } = props;
@@ -214,28 +247,73 @@ export function LocalLLMSelector() {
                                     {sortByValue ? <ArrowDownUp className="h-3 w-3" /> : <ArrowUpDown className="h-3 w-3" />}
                                     <span>{sortByValue ? "По значению" : "По размеру"}</span>
                                 </button>
-                                {/* Legend */}
-                                <div className="flex items-center gap-3 text-[9px] text-muted-foreground">
-                                    <div className="flex items-center gap-1">
-                                        <Network className="h-3 w-3 text-green-700" />
+                                {/* Legend - Filter Buttons */}
+                                <div className="flex items-center gap-2 text-[9px]">
+                                    <button
+                                        onClick={() => toggleFilter('moeHybrid')}
+                                        className={cn(
+                                            "flex items-center gap-1 px-2 py-1 rounded-lg border transition-all",
+                                            filters.moeHybrid
+                                                ? "bg-green-500/20 border-green-500/50 text-green-700"
+                                                : "border-transparent text-muted-foreground hover:bg-muted/50 hover:border-border/40"
+                                        )}
+                                        title="Фильтр: MoE/Hybrid архитектура"
+                                    >
+                                        <Network className="h-3 w-3" />
                                         <span>MoE/Hybrid</span>
-                                    </div>
-                                    <div className="flex items-center gap-1">
-                                        <Brain className="h-3 w-3 text-pink-500" />
+                                    </button>
+                                    <button
+                                        onClick={() => toggleFilter('reasoning')}
+                                        className={cn(
+                                            "flex items-center gap-1 px-2 py-1 rounded-lg border transition-all",
+                                            filters.reasoning
+                                                ? "bg-pink-500/20 border-pink-500/50 text-pink-600"
+                                                : "border-transparent text-muted-foreground hover:bg-muted/50 hover:border-border/40"
+                                        )}
+                                        title="Фильтр: Reasoning модели"
+                                    >
+                                        <Brain className="h-3 w-3" />
                                         <span>Reasoning</span>
-                                    </div>
-                                    <div className="flex items-center gap-1">
-                                        <Unlock className="h-3 w-3 text-foreground" />
+                                    </button>
+                                    <button
+                                        onClick={() => toggleFilter('openSource')}
+                                        className={cn(
+                                            "flex items-center gap-1 px-2 py-1 rounded-lg border transition-all",
+                                            filters.openSource
+                                                ? "bg-foreground/10 border-foreground/30 text-foreground"
+                                                : "border-transparent text-muted-foreground hover:bg-muted/50 hover:border-border/40"
+                                        )}
+                                        title="Фильтр: Open Source модели"
+                                    >
+                                        <Unlock className="h-3 w-3" />
                                         <span>Open Source</span>
-                                    </div>
-                                    <div className="flex items-center gap-1">
-                                        <Eye className="h-3 w-3 text-amber-500" />
+                                    </button>
+                                    <button
+                                        onClick={() => toggleFilter('visual')}
+                                        className={cn(
+                                            "flex items-center gap-1 px-2 py-1 rounded-lg border transition-all",
+                                            filters.visual
+                                                ? "bg-amber-500/20 border-amber-500/50 text-amber-700"
+                                                : "border-transparent text-muted-foreground hover:bg-muted/50 hover:border-border/40"
+                                        )}
+                                        title="Фильтр: Visual модели"
+                                    >
+                                        <Eye className="h-3 w-3" />
                                         <span>Visual</span>
-                                    </div>
-                                    <div className="flex items-center gap-1">
-                                        <BookOpen className="h-3 w-3 text-blue-500" />
+                                    </button>
+                                    <button
+                                        onClick={() => toggleFilter('longContext')}
+                                        className={cn(
+                                            "flex items-center gap-1 px-2 py-1 rounded-lg border transition-all",
+                                            filters.longContext
+                                                ? "bg-blue-500/20 border-blue-500/50 text-blue-700"
+                                                : "border-transparent text-muted-foreground hover:bg-muted/50 hover:border-border/40"
+                                        )}
+                                        title="Фильтр: Long Context (≥128k)"
+                                    >
+                                        <BookOpen className="h-3 w-3" />
                                         <span>Long Context</span>
-                                    </div>
+                                    </button>
                                 </div>
                             </div>
                         </div>
