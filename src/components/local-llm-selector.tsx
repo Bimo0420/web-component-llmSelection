@@ -21,35 +21,27 @@ import { Eye, BookOpen } from "lucide-react"
 
 type Scenario = "coding" | "chat" | "documents"
 
-const CAPABILITY_RANK = {
-    Basic: 1,
-    Good: 2,
-    Advanced: 3,
-    Excellent: 4,
-    "Think Mode": 5,
-}
-
 // Definition of all available benchmarks
 const ALL_BENCHMARKS: { key: keyof ModelData['benchmarks']; label: string; description: string; invert?: boolean; color: string }[] = [
-    { key: "ttft_ms", label: "TTFT (ms)", description: "Скорость реакции — время до генерации первого слова (меньше — лучше).", invert: true, color: "hsl(142, 71%, 45%)" },
-    { key: "la_perf", label: "La Perf", description: "Эффективность работы с длинными документами и RAG.", color: "hsl(142, 71%, 45%)" },
-    { key: "ifeval", label: "IFEval", description: "Способность точно следовать сложным инструкциям и форматам.", color: "hsl(142, 71%, 45%)" },
-    { key: "mmlu_pro", label: "MMLU-Pro", description: "Глубокое понимание профессиональных областей и сложная логика.", color: "hsl(142, 71%, 45%)" },
-    { key: "live_code_bench", label: "LiveCodeBench", description: "Оценка навыков написания кода на реальных задачах.", color: "hsl(142, 71%, 45%)" },
-    { key: "math_500", label: "Math 500", description: "Тест на решение сложных математических задач.", color: "hsl(142, 71%, 45%)" },
-    { key: "open_llm_leaderboard_v2", label: "Open LLM V2", description: "Интегральный показатель знаний и общего качества модели.", color: "hsl(142, 71%, 45%)" },
+    { key: "aa_lcr", label: "AA-LCR", description: "Long Context Reasoning — способность работать с длинным контекстом и рассуждать.", color: "hsl(142, 71%, 45%)" },
+    { key: "aa_omniscience_accuracy", label: "AA Accuracy", description: "Точность ответов модели на основе всезнания.", color: "hsl(200, 71%, 45%)" },
+    { key: "aa_omniscience_non_hallucination", label: "AA Non-Hallucination", description: "Способность избегать галлюцинаций в ответах.", color: "hsl(280, 71%, 45%)" },
+    { key: "hle", label: "HLE", description: "Humanity's Last Exam — сложный экзамен на общие знания.", color: "hsl(30, 71%, 45%)" },
+    { key: "gpqa_diamond", label: "GPQA Diamond", description: "Graduate-level Physics Question Answering — физика на уровне аспирантуры.", color: "hsl(260, 71%, 45%)" },
+    { key: "ifbench", label: "IFBench", description: "Instruction Following Benchmark — следование инструкциям.", color: "hsl(180, 71%, 45%)" },
+    { key: "mmmu_pro", label: "MMMU Pro", description: "Multimodal Understanding — визуальное рассуждение и понимание.", color: "hsl(320, 71%, 45%)" },
 ]
 
 // Mapping which benchmarks are relevant for which scenario
 const SCENARIO_RELEVANCE: Record<Scenario, (keyof ModelData['benchmarks'])[]> = {
-    coding: ["live_code_bench", "math_500", "open_llm_leaderboard_v2"],
-    chat: ["ttft_ms", "la_perf"],
-    documents: ["ifeval", "mmlu_pro"],
+    coding: ["ifbench", "gpqa_diamond", "aa_lcr"],
+    chat: ["aa_omniscience_non_hallucination", "hle"],
+    documents: ["aa_lcr", "aa_omniscience_accuracy"],
 }
 
 export function LocalLLMSelector() {
     const [scenario, setScenario] = React.useState<Scenario>("chat")
-    const [activeTab, setActiveTab] = React.useState<string>("ttft_ms")
+    const [activeTab, setActiveTab] = React.useState<string>("aa_lcr")
 
     // Determine relevant benchmarks for the selected scenario
     const relevantBenchmarks = React.useMemo(() => new Set(SCENARIO_RELEVANCE[scenario]), [scenario])
@@ -126,19 +118,19 @@ export function LocalLLMSelector() {
                 <foreignObject x={-175} y={-12} width={175} height={24}>
                     <div className="flex items-center justify-end gap-1.5 h-full px-2">
                         <div className="flex items-center gap-1 shrink-0">
-                            {dataPoint.architecture === 'MoE' && (
-                                <span className="text-[7px] font-bold text-purple-600 bg-purple-500/10 px-0.5 rounded leading-tight border border-purple-500/20">MoE</span>
+                            {(dataPoint.architecture === 'MoE' || dataPoint.architecture === 'Hybrid MoE' || dataPoint.architecture === 'Hybrid Linear') && (
+                                <span className="text-[7px] font-bold text-purple-600 bg-purple-500/10 px-0.5 rounded leading-tight border border-purple-500/20">{dataPoint.architecture === 'MoE' ? 'MoE' : 'Hybrid'}</span>
                             )}
-                            {dataPoint.vision && (
+                            {dataPoint.visual && (
                                 <Eye className="h-3 w-3 text-amber-500" />
                             )}
-                            {dataPoint.context_window >= 128000 && (
+                            {dataPoint.context_window >= 128 && (
                                 <div className="flex items-center gap-0.5">
                                     <BookOpen className="h-3 w-3 text-blue-500 shrink-0" />
-                                    {dataPoint.context_window >= 256000 && (
+                                    {dataPoint.context_window >= 256 && (
                                         <BookOpen className="h-3 w-3 text-blue-500 shrink-0" />
                                     )}
-                                    {dataPoint.context_window >= 1000000 && (
+                                    {dataPoint.context_window >= 1000 && (
                                         <BookOpen className="h-3 w-3 text-blue-500 shrink-0" />
                                     )}
                                 </div>
