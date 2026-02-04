@@ -11,29 +11,28 @@ export interface ModelData {
     reasoning: boolean;
     visual: boolean;
     open_source: OpenSourceStatus;
-    speed: number; // Tokens per second
+    speed: number | null; // Output speed (tokens per second), null for n/a
     memory: {
-        fp16: number; // GB
-        fp8?: number; // GB
-        int4?: number; // GB
-        sfp8?: number; // GB
+        q16: number; // GB (Q16 quantization)
+        q8?: number | null; // GB (Q8 quantization)
+        q4?: number | null; // GB (Q4 quantization)
+        sfp8?: number | null; // GB (SFP8 quantization)
+        mxfp4?: number | null; // GB (MXFP4 quantization)
     };
-    cost_per_100k_tokens_fp16: number; // GB per 100k tokens
+    kv_cache_per_100k_tokens: number; // GB per 100k tokens (FP16)
     benchmarks: {
-        aa_lcr?: number; // AA-LCR (Long Context Reasoning)
-        aa_omniscience_accuracy?: number;
-        aa_omniscience_non_hallucination?: number;
-        hle?: number; // Humanity's Last Exam
-        gpqa_diamond?: number;
-        ifbench?: number;
-        mmmu_pro?: number; // Visual Reasoning
+        aa_lcr?: number | null; // AA-LCR (Long Context Reasoning)
+        aa_omniscience_accuracy?: number | null;
+        aa_omniscience_non_hallucination?: number | null;
+        ifbench?: number | null;
+        mmmu_pro?: number | null; // Visual Reasoning
     };
 }
 
 export const MODELS: ModelData[] = [
     {
         id: "gpt-oss-120b",
-        name: "GPT-OSS (120B)",
+        name: "gpt-oss-120b",
         architecture: "MoE",
         params: 117,
         active_params: 5,
@@ -42,16 +41,9 @@ export const MODELS: ModelData[] = [
         visual: false,
         open_source: "Open Source",
         speed: 338,
-        memory: { fp16: 65, fp8: 63, int4: 63, sfp8: 63 },
-        cost_per_100k_tokens_fp16: 6.87,
-        benchmarks: {
-            aa_lcr: 51,
-            aa_omniscience_accuracy: 20,
-            aa_omniscience_non_hallucination: 10,
-            hle: 19,
-            gpqa_diamond: 78,
-            ifbench: 69
-        }
+        memory: { q16: 65, q8: 63, q4: 63, mxfp4: 63 },
+        kv_cache_per_100k_tokens: 6.87,
+        benchmarks: { aa_lcr: 51, aa_omniscience_accuracy: 20, aa_omniscience_non_hallucination: 10, ifbench: 69 }
     },
     {
         id: "llama-4-scout",
@@ -63,18 +55,10 @@ export const MODELS: ModelData[] = [
         reasoning: false,
         visual: true,
         open_source: "Open Weights",
-        speed: 256,
-        memory: { fp16: 113, fp8: 68 },
-        cost_per_100k_tokens_fp16: 18.31,
-        benchmarks: {
-            aa_lcr: 26,
-            aa_omniscience_accuracy: 14,
-            aa_omniscience_non_hallucination: 21,
-            hle: 4,
-            gpqa_diamond: 59,
-            ifbench: 40,
-            mmmu_pro: 53
-        }
+        speed: null,
+        memory: { q16: 256, q8: 113, q4: 68 },
+        kv_cache_per_100k_tokens: 18.31,
+        benchmarks: { aa_lcr: 26, aa_omniscience_accuracy: 14, aa_omniscience_non_hallucination: 21, ifbench: 40, mmmu_pro: 53 }
     },
     {
         id: "glm-4.5-air",
@@ -87,16 +71,9 @@ export const MODELS: ModelData[] = [
         visual: false,
         open_source: "Open Source",
         speed: 119,
-        memory: { fp16: 221, fp8: 117, int4: 74 },
-        cost_per_100k_tokens_fp16: 17.55,
-        benchmarks: {
-            aa_lcr: 44,
-            aa_omniscience_accuracy: 15,
-            aa_omniscience_non_hallucination: 8,
-            hle: 7,
-            gpqa_diamond: 73,
-            ifbench: 38
-        }
+        memory: { q16: 221, q8: 117, q4: 74 },
+        kv_cache_per_100k_tokens: 17.55,
+        benchmarks: { aa_lcr: 44, aa_omniscience_accuracy: 15, aa_omniscience_non_hallucination: 8, ifbench: 38 }
     },
     {
         id: "ring-flash-2.0",
@@ -109,16 +86,9 @@ export const MODELS: ModelData[] = [
         visual: false,
         open_source: "Open Source",
         speed: 97,
-        memory: { fp16: 206, fp8: 110, int4: 62, sfp8: 62 },
-        cost_per_100k_tokens_fp16: 6.10,
-        benchmarks: {
-            aa_lcr: 21,
-            aa_omniscience_accuracy: 16,
-            aa_omniscience_non_hallucination: 11,
-            hle: 9,
-            gpqa_diamond: 73,
-            ifbench: 43
-        }
+        memory: { q16: 206, q8: 110, q4: 62, mxfp4: 62 },
+        kv_cache_per_100k_tokens: 6.10,
+        benchmarks: { aa_lcr: 21, aa_omniscience_accuracy: 16, aa_omniscience_non_hallucination: 11, ifbench: 43 }
     },
     {
         id: "ling-flash-2.0",
@@ -131,16 +101,9 @@ export const MODELS: ModelData[] = [
         visual: false,
         open_source: "Open Source",
         speed: 73,
-        memory: { fp16: 206, fp8: 110, int4: 62, sfp8: 62 },
-        cost_per_100k_tokens_fp16: 6.10,
-        benchmarks: {
-            aa_lcr: 15,
-            aa_omniscience_accuracy: 14,
-            aa_omniscience_non_hallucination: 6,
-            hle: 6,
-            gpqa_diamond: 66,
-            ifbench: 34
-        }
+        memory: { q16: 206, q8: 110, q4: 62, mxfp4: 62 },
+        kv_cache_per_100k_tokens: 6.10,
+        benchmarks: { aa_lcr: 15, aa_omniscience_accuracy: 14, aa_omniscience_non_hallucination: 6, ifbench: 34 }
     },
     {
         id: "qwen3-next-80b",
@@ -153,16 +116,9 @@ export const MODELS: ModelData[] = [
         visual: false,
         open_source: "Open Weights",
         speed: 172,
-        memory: { fp16: 160, fp8: 85, int4: 48 },
-        cost_per_100k_tokens_fp16: 2.29,
-        benchmarks: {
-            aa_lcr: 51,
-            aa_omniscience_accuracy: 17,
-            aa_omniscience_non_hallucination: 7,
-            hle: 7,
-            gpqa_diamond: 74,
-            ifbench: 40
-        }
+        memory: { q16: 160, q8: 85, q4: 48 },
+        kv_cache_per_100k_tokens: 2.29,
+        benchmarks: { aa_lcr: 51, aa_omniscience_accuracy: 17, aa_omniscience_non_hallucination: 7, ifbench: 40 }
     },
     {
         id: "deepseek-r1-70b",
@@ -175,16 +131,9 @@ export const MODELS: ModelData[] = [
         visual: false,
         open_source: "Open Weights",
         speed: 42,
-        memory: { fp16: 142, fp8: 75, int4: 43 },
-        cost_per_100k_tokens_fp16: 30.52,
-        benchmarks: {
-            aa_lcr: 11,
-            aa_omniscience_accuracy: 19,
-            aa_omniscience_non_hallucination: 19,
-            hle: 6,
-            gpqa_diamond: 40,
-            ifbench: 28
-        }
+        memory: { q16: 142, q8: 75, q4: 43 },
+        kv_cache_per_100k_tokens: 30.52,
+        benchmarks: { aa_lcr: 11, aa_omniscience_accuracy: 19, aa_omniscience_non_hallucination: 19, ifbench: 28 }
     },
     {
         id: "llama-3.3-70b",
@@ -197,16 +146,9 @@ export const MODELS: ModelData[] = [
         visual: false,
         open_source: "Open Weights",
         speed: 140,
-        memory: { fp16: 141, fp8: 75, int4: 43 },
-        cost_per_100k_tokens_fp16: 30.52,
-        benchmarks: {
-            aa_lcr: 15,
-            aa_omniscience_accuracy: 18,
-            aa_omniscience_non_hallucination: 11,
-            hle: 4,
-            gpqa_diamond: 50,
-            ifbench: 47
-        }
+        memory: { q16: 141, q8: 75, q4: 43 },
+        kv_cache_per_100k_tokens: 30.52,
+        benchmarks: { aa_lcr: 15, aa_omniscience_accuracy: 18, aa_omniscience_non_hallucination: 11, ifbench: 47 }
     },
     {
         id: "llama-3.1-70b",
@@ -219,16 +161,9 @@ export const MODELS: ModelData[] = [
         visual: false,
         open_source: "Open Weights",
         speed: 44,
-        memory: { fp16: 141, fp8: 75, int4: 43 },
-        cost_per_100k_tokens_fp16: 30.52,
-        benchmarks: {
-            aa_lcr: 7,
-            aa_omniscience_accuracy: 16,
-            aa_omniscience_non_hallucination: 31,
-            hle: 5,
-            gpqa_diamond: 47,
-            ifbench: 31
-        }
+        memory: { q16: 141, q8: 75, q4: 43 },
+        kv_cache_per_100k_tokens: 30.52,
+        benchmarks: { aa_lcr: 7, aa_omniscience_accuracy: 16, aa_omniscience_non_hallucination: 31, ifbench: 31 }
     },
     {
         id: "kimi-linear",
@@ -240,15 +175,10 @@ export const MODELS: ModelData[] = [
         reasoning: false,
         visual: false,
         open_source: "Open Source",
-        speed: 103,
-        memory: { fp16: 54, fp8: 29, int4: 29 },
-        cost_per_100k_tokens_fp16: 10.68,
-        benchmarks: {
-            aa_lcr: 26,
-            aa_omniscience_non_hallucination: 3,
-            gpqa_diamond: 41,
-            ifbench: 28
-        }
+        speed: null,
+        memory: { q16: 103, q8: 54, q4: 29, mxfp4: 29 },
+        kv_cache_per_100k_tokens: 10.68,
+        benchmarks: { aa_lcr: 26, ifbench: 28 }
     },
     {
         id: "qwen3-vl-32b",
@@ -261,17 +191,9 @@ export const MODELS: ModelData[] = [
         visual: true,
         open_source: "Open Weights",
         speed: 90,
-        memory: { fp16: 66, fp8: 35, int4: 20 },
-        cost_per_100k_tokens_fp16: 24.41,
-        benchmarks: {
-            aa_lcr: 31,
-            aa_omniscience_accuracy: 14,
-            aa_omniscience_non_hallucination: 9,
-            hle: 6,
-            gpqa_diamond: 67,
-            ifbench: 39,
-            mmmu_pro: 64
-        }
+        memory: { q16: 66, q8: 35, q4: 20 },
+        kv_cache_per_100k_tokens: 24.41,
+        benchmarks: { aa_lcr: 31, aa_omniscience_accuracy: 14, aa_omniscience_non_hallucination: 9, ifbench: 39, mmmu_pro: 64 }
     },
     {
         id: "granite-4.0-hsmall",
@@ -284,16 +206,9 @@ export const MODELS: ModelData[] = [
         visual: false,
         open_source: "Open Source",
         speed: 454,
-        memory: { fp16: 64, fp8: 34, int4: 19, sfp8: 10 },
-        cost_per_100k_tokens_fp16: 1.53,
-        benchmarks: {
-            aa_lcr: 9,
-            aa_omniscience_accuracy: 13,
-            aa_omniscience_non_hallucination: 13,
-            hle: 4,
-            gpqa_diamond: 42,
-            ifbench: 32
-        }
+        memory: { q16: 64, q8: 34, q4: 19, mxfp4: 10 },
+        kv_cache_per_100k_tokens: 1.53,
+        benchmarks: { aa_lcr: 9, aa_omniscience_accuracy: 13, aa_omniscience_non_hallucination: 13, ifbench: 32 }
     },
     {
         id: "nvidia-nemotron-3-nano-30b",
@@ -306,16 +221,9 @@ export const MODELS: ModelData[] = [
         visual: false,
         open_source: "Open Weights",
         speed: 189,
-        memory: { fp16: 60, fp8: 32, int4: 21 },
-        cost_per_100k_tokens_fp16: 0.57,
-        benchmarks: {
-            aa_lcr: 7,
-            aa_omniscience_accuracy: 13,
-            aa_omniscience_non_hallucination: 10,
-            hle: 5,
-            gpqa_diamond: 40,
-            ifbench: 38
-        }
+        memory: { q16: 60, q8: 32, q4: 21 },
+        kv_cache_per_100k_tokens: 0.57,
+        benchmarks: { aa_lcr: 7, aa_omniscience_accuracy: 13, aa_omniscience_non_hallucination: 10, ifbench: 38 }
     },
     {
         id: "glm-4.7-flash",
@@ -328,16 +236,9 @@ export const MODELS: ModelData[] = [
         visual: false,
         open_source: "Open Source",
         speed: 114,
-        memory: { fp16: 60, fp8: 36, int4: 20, sfp8: 18 },
-        cost_per_100k_tokens_fp16: 22.41,
-        benchmarks: {
-            aa_lcr: 15,
-            aa_omniscience_accuracy: 12,
-            aa_omniscience_non_hallucination: 6,
-            hle: 5,
-            gpqa_diamond: 45,
-            ifbench: 46
-        }
+        memory: { q16: 60, q8: 36, q4: 20, mxfp4: 18 },
+        kv_cache_per_100k_tokens: 22.41,
+        benchmarks: { aa_lcr: 15, aa_omniscience_accuracy: 12, aa_omniscience_non_hallucination: 6, ifbench: 46 }
     },
     {
         id: "qwen3-coder-30b",
@@ -350,16 +251,9 @@ export const MODELS: ModelData[] = [
         visual: false,
         open_source: "Open Weights",
         speed: 111,
-        memory: { fp16: 61, fp8: 32, int4: 19 },
-        cost_per_100k_tokens_fp16: 9.16,
-        benchmarks: {
-            aa_lcr: 29,
-            aa_omniscience_accuracy: 15,
-            aa_omniscience_non_hallucination: 21,
-            hle: 4,
-            gpqa_diamond: 52,
-            ifbench: 33
-        }
+        memory: { q16: 61, q8: 32, q4: 19 },
+        kv_cache_per_100k_tokens: 9.16,
+        benchmarks: { aa_lcr: 29, aa_omniscience_accuracy: 15, aa_omniscience_non_hallucination: 21, ifbench: 33 }
     },
     {
         id: "qwen3-30b",
@@ -372,16 +266,9 @@ export const MODELS: ModelData[] = [
         visual: false,
         open_source: "Open Weights",
         speed: 75,
-        memory: { fp16: 60, fp8: 32, int4: 18 },
-        cost_per_100k_tokens_fp16: 9.16,
-        benchmarks: {
-            aa_lcr: 23,
-            aa_omniscience_accuracy: 14,
-            aa_omniscience_non_hallucination: 5,
-            hle: 7,
-            gpqa_diamond: 66,
-            ifbench: 33
-        }
+        memory: { q16: 60, q8: 32, q4: 18 },
+        kv_cache_per_100k_tokens: 9.16,
+        benchmarks: { aa_lcr: 23, aa_omniscience_accuracy: 14, aa_omniscience_non_hallucination: 5, ifbench: 33 }
     },
     {
         id: "qwen3-vl-30b",
@@ -394,17 +281,9 @@ export const MODELS: ModelData[] = [
         visual: true,
         open_source: "Open Weights",
         speed: 117,
-        memory: { fp16: 60, fp8: 32, int4: 19 },
-        cost_per_100k_tokens_fp16: 9.16,
-        benchmarks: {
-            aa_lcr: 24,
-            aa_omniscience_accuracy: 15,
-            aa_omniscience_non_hallucination: 8,
-            hle: 6,
-            gpqa_diamond: 70,
-            ifbench: 33,
-            mmmu_pro: 62
-        }
+        memory: { q16: 60, q8: 32, q4: 19 },
+        kv_cache_per_100k_tokens: 9.16,
+        benchmarks: { aa_lcr: 24, aa_omniscience_accuracy: 15, aa_omniscience_non_hallucination: 8, ifbench: 33, mmmu_pro: 62 }
     },
     {
         id: "gemma-3-27b",
@@ -417,17 +296,9 @@ export const MODELS: ModelData[] = [
         visual: true,
         open_source: "Open Weights",
         speed: 46,
-        memory: { fp16: 54, fp8: 29, int4: 17, sfp8: 27 },
-        cost_per_100k_tokens_fp16: 47.30,
-        benchmarks: {
-            aa_lcr: 6,
-            aa_omniscience_accuracy: 12,
-            aa_omniscience_non_hallucination: 9,
-            hle: 5,
-            gpqa_diamond: 43,
-            ifbench: 32,
-            mmmu_pro: 48
-        }
+        memory: { q16: 54, q8: 29, q4: 17, sfp8: 27 },
+        kv_cache_per_100k_tokens: 47.30,
+        benchmarks: { aa_lcr: 6, aa_omniscience_accuracy: 12, aa_omniscience_non_hallucination: 9, ifbench: 32, mmmu_pro: 48 }
     },
     {
         id: "devstral-small-2",
@@ -440,17 +311,9 @@ export const MODELS: ModelData[] = [
         visual: false,
         open_source: "Open Source",
         speed: 209,
-        memory: { fp16: 48, fp8: 26, int4: 14 },
-        cost_per_100k_tokens_fp16: 15.26,
-        benchmarks: {
-            aa_lcr: 24,
-            aa_omniscience_accuracy: 15,
-            aa_omniscience_non_hallucination: 13,
-            hle: 3,
-            gpqa_diamond: 53,
-            ifbench: 31,
-            mmmu_pro: 45
-        }
+        memory: { q16: 48, q8: 26, q4: 14 },
+        kv_cache_per_100k_tokens: 15.26,
+        benchmarks: { aa_lcr: 24, aa_omniscience_accuracy: 15, aa_omniscience_non_hallucination: 13, ifbench: 31 }
     },
     {
         id: "mistral-small-3.2",
@@ -463,21 +326,13 @@ export const MODELS: ModelData[] = [
         visual: true,
         open_source: "Open Weights",
         speed: 147,
-        memory: { fp16: 67, fp8: 36, int4: 20, sfp8: 18 },
-        cost_per_100k_tokens_fp16: 15.26,
-        benchmarks: {
-            aa_lcr: 17,
-            aa_omniscience_accuracy: 14,
-            aa_omniscience_non_hallucination: 24,
-            hle: 4,
-            gpqa_diamond: 51,
-            ifbench: 34,
-            mmmu_pro: 48
-        }
+        memory: { q16: 67, q8: 36, q4: 20, mxfp4: 18 },
+        kv_cache_per_100k_tokens: 15.26,
+        benchmarks: { aa_lcr: 17, aa_omniscience_accuracy: 14, aa_omniscience_non_hallucination: 24, ifbench: 34, mmmu_pro: 48 }
     },
     {
         id: "gpt-oss-20b",
-        name: "GPT-OSS (20B)",
+        name: "gpt-oss-20b",
         architecture: "MoE",
         params: 21,
         active_params: 4,
@@ -486,16 +341,9 @@ export const MODELS: ModelData[] = [
         visual: false,
         open_source: "Open Source",
         speed: 308,
-        memory: { fp16: 14, fp8: 12, int4: 12, sfp8: 11 },
-        cost_per_100k_tokens_fp16: 4.58,
-        benchmarks: {
-            aa_lcr: 31,
-            aa_omniscience_accuracy: 15,
-            aa_omniscience_non_hallucination: 7,
-            hle: 10,
-            gpqa_diamond: 69,
-            ifbench: 65
-        }
+        memory: { q16: 14, q8: 12, q4: 12, mxfp4: 11 },
+        kv_cache_per_100k_tokens: 4.58,
+        benchmarks: { aa_lcr: 31, aa_omniscience_accuracy: 15, aa_omniscience_non_hallucination: 7, ifbench: 65 }
     },
     {
         id: "apriel-v1.6",
@@ -508,16 +356,9 @@ export const MODELS: ModelData[] = [
         visual: true,
         open_source: "Open Weights",
         speed: 156,
-        memory: { fp16: 30, fp8: 16, int4: 9 },
-        cost_per_100k_tokens_fp16: 19.07,
-        benchmarks: {
-            aa_lcr: 50,
-            aa_omniscience_accuracy: 17,
-            aa_omniscience_non_hallucination: 8,
-            hle: 10,
-            gpqa_diamond: 73,
-            ifbench: 69
-        }
+        memory: { q16: 30, q8: 16, q4: 9 },
+        kv_cache_per_100k_tokens: 19.07,
+        benchmarks: { aa_lcr: 50, aa_omniscience_accuracy: 17, aa_omniscience_non_hallucination: 8, ifbench: 69 }
     },
     {
         id: "ministral-3-14b",
@@ -530,17 +371,9 @@ export const MODELS: ModelData[] = [
         visual: true,
         open_source: "Open Weights",
         speed: 148,
-        memory: { fp16: 28, fp8: 15, int4: 9 },
-        cost_per_100k_tokens_fp16: 15.26,
-        benchmarks: {
-            aa_lcr: 22,
-            aa_omniscience_accuracy: 12,
-            aa_omniscience_non_hallucination: 10,
-            hle: 5,
-            gpqa_diamond: 57,
-            ifbench: 32,
-            mmmu_pro: 50
-        }
+        memory: { q16: 28, q8: 15, q4: 9 },
+        kv_cache_per_100k_tokens: 15.26,
+        benchmarks: { aa_lcr: 22, aa_omniscience_accuracy: 12, aa_omniscience_non_hallucination: 10, ifbench: 32, mmmu_pro: 50 }
     },
     {
         id: "phi-4",
@@ -553,16 +386,9 @@ export const MODELS: ModelData[] = [
         visual: true,
         open_source: "Open Source",
         speed: 17,
-        memory: { fp16: 11, fp8: 6, int4: 3 },
-        cost_per_100k_tokens_fp16: 12.21,
-        benchmarks: {
-            aa_lcr: 0,
-            aa_omniscience_accuracy: 14,
-            aa_omniscience_non_hallucination: 21,
-            hle: 4,
-            gpqa_diamond: 57,
-            ifbench: 24
-        }
+        memory: { q16: 11, q8: 6, q4: 3 },
+        kv_cache_per_100k_tokens: 12.21,
+        benchmarks: { aa_omniscience_accuracy: 13, aa_omniscience_non_hallucination: 21, ifbench: 24 }
     },
     {
         id: "nvidia-nemotron-nano-13b",
@@ -575,17 +401,9 @@ export const MODELS: ModelData[] = [
         visual: true,
         open_source: "Open Weights",
         speed: 137,
-        memory: { fp16: 24, fp8: 13, int4: 21, sfp8: 24 },
-        cost_per_100k_tokens_fp16: 3.81,
-        benchmarks: {
-            aa_lcr: 17,
-            aa_omniscience_accuracy: 11,
-            aa_omniscience_non_hallucination: 6,
-            hle: 5,
-            gpqa_diamond: 44,
-            ifbench: 26,
-            mmmu_pro: 45
-        }
+        memory: { q16: 24, q8: 13, q4: 21, mxfp4: 24 },
+        kv_cache_per_100k_tokens: 3.81,
+        benchmarks: { aa_lcr: 17, aa_omniscience_accuracy: 11, aa_omniscience_non_hallucination: 6, ifbench: 26, mmmu_pro: 45 }
     },
     {
         id: "gemma-3-12b",
@@ -598,17 +416,9 @@ export const MODELS: ModelData[] = [
         visual: true,
         open_source: "Open Weights",
         speed: 44,
-        memory: { fp16: 24, fp8: 15, int4: 8, sfp8: 12 },
-        cost_per_100k_tokens_fp16: 34.33,
-        benchmarks: {
-            aa_lcr: 12,
-            aa_omniscience_accuracy: 10,
-            aa_omniscience_non_hallucination: 3,
-            hle: 5,
-            gpqa_diamond: 35,
-            ifbench: 37,
-            mmmu_pro: 38
-        }
+        memory: { q16: 24, q8: 15, q4: 8, sfp8: 12 },
+        kv_cache_per_100k_tokens: 34.33,
+        benchmarks: { aa_lcr: 7, aa_omniscience_accuracy: 10, aa_omniscience_non_hallucination: 3, ifbench: 37, mmmu_pro: 38 }
     },
     {
         id: "llama-3.2-11b",
@@ -621,17 +431,9 @@ export const MODELS: ModelData[] = [
         visual: true,
         open_source: "Open Weights",
         speed: 77,
-        memory: { fp16: 22, fp8: 12, int4: 7 },
-        cost_per_100k_tokens_fp16: 12.21,
-        benchmarks: {
-            aa_lcr: 12,
-            aa_omniscience_accuracy: 10,
-            aa_omniscience_non_hallucination: 20,
-            hle: 5,
-            gpqa_diamond: 32,
-            ifbench: 30,
-            mmmu_pro: 29
-        }
+        memory: { q16: 22, q8: 12, q4: 7 },
+        kv_cache_per_100k_tokens: 12.21,
+        benchmarks: { aa_lcr: 12, aa_omniscience_accuracy: 10, aa_omniscience_non_hallucination: 20, ifbench: 30, mmmu_pro: 29 }
     },
     {
         id: "nvidia-nemotron-nano-9b",
@@ -644,16 +446,9 @@ export const MODELS: ModelData[] = [
         visual: false,
         open_source: "Open Weights",
         speed: 121,
-        memory: { fp16: 17, fp8: 9, int4: 6 },
-        cost_per_100k_tokens_fp16: 1.53,
-        benchmarks: {
-            aa_lcr: 23,
-            aa_omniscience_accuracy: 9,
-            aa_omniscience_non_hallucination: 26,
-            hle: 4,
-            gpqa_diamond: 56,
-            ifbench: 27
-        }
+        memory: { q16: 17, q8: 9, q4: 6 },
+        kv_cache_per_100k_tokens: 1.53,
+        benchmarks: { aa_lcr: 23, aa_omniscience_accuracy: 9, aa_omniscience_non_hallucination: 26, ifbench: 27 }
     },
     {
         id: "qwen3-vl-8b",
@@ -666,17 +461,9 @@ export const MODELS: ModelData[] = [
         visual: true,
         open_source: "Open Weights",
         speed: 97,
-        memory: { fp16: 15, fp8: 8, int4: 5 },
-        cost_per_100k_tokens_fp16: 13.73,
-        benchmarks: {
-            aa_lcr: 15,
-            aa_omniscience_accuracy: 19,
-            aa_omniscience_non_hallucination: 10,
-            hle: 3,
-            gpqa_diamond: 43,
-            ifbench: 32,
-            mmmu_pro: 47
-        }
+        memory: { q16: 15, q8: 8, q4: 5 },
+        kv_cache_per_100k_tokens: 13.73,
+        benchmarks: { aa_lcr: 15, aa_omniscience_accuracy: 19, aa_omniscience_non_hallucination: 10, ifbench: 32, mmmu_pro: 47 }
     },
     {
         id: "deepseek-r1-8b",
@@ -688,17 +475,10 @@ export const MODELS: ModelData[] = [
         reasoning: true,
         visual: false,
         open_source: "Open Source",
-        speed: 16,
-        memory: { fp16: 9, fp8: 5 },
-        cost_per_100k_tokens_fp16: 12.21,
-        benchmarks: {
-            aa_lcr: 13,
-            aa_omniscience_accuracy: 11,
-            aa_omniscience_non_hallucination: 14,
-            hle: 6,
-            gpqa_diamond: 61,
-            ifbench: 20
-        }
+        speed: null,
+        memory: { q16: 16, q8: 9, q4: 5 },
+        kv_cache_per_100k_tokens: 12.21,
+        benchmarks: { aa_lcr: 13, aa_omniscience_accuracy: 11, aa_omniscience_non_hallucination: 14, ifbench: 20 }
     },
     {
         id: "ministral-3-8b",
@@ -711,16 +491,8 @@ export const MODELS: ModelData[] = [
         visual: true,
         open_source: "Open Weights",
         speed: 193,
-        memory: { fp16: 16, fp8: 9, int4: 5 },
-        cost_per_100k_tokens_fp16: 13.73,
-        benchmarks: {
-            aa_lcr: 24,
-            aa_omniscience_accuracy: 12,
-            aa_omniscience_non_hallucination: 7,
-            hle: 4,
-            gpqa_diamond: 47,
-            ifbench: 29,
-            mmmu_pro: 46
-        }
+        memory: { q16: 16, q8: 9, q4: 5 },
+        kv_cache_per_100k_tokens: 13.73,
+        benchmarks: { aa_lcr: 24, aa_omniscience_accuracy: 12, aa_omniscience_non_hallucination: 7, ifbench: 29, mmmu_pro: 46 }
     }
 ];

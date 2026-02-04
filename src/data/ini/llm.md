@@ -3,41 +3,42 @@
 - Parameters: 117
 - Active Parameters: 5
 - Context Window: 131
-- Архитектура: MoE
+- Architecture: MoE
 - Reasoning: yes
 - Visual: no
 - Open Source / Open Weights: Open Source
-- Speed: 338
-- 16 bit: 65
-- 8 bit: 63
-- 4 bit: 63
-- SFP8: 63
-- GB \ 100k token \ FP16: 6,87
+- Output Speed (t/s): 338
+- Q16: 65
+- Q8: 63
+- Q4: 63
+- SFP8: n/a
+- MXFP4: 63
+- KV-кэш: GB \ 100k token \ FP16: 6,87
 - AA-LCR (Long Context Reasoning): 51
 - AA-Omniscience Accuracy: 20
 - AA-Omniscience non-halucination: 10
-- Humanity's Last Exam (HLE): 19
-- GPQA Diamond: 78
 - IFBench: 69
+- MMMU Pro (Visual Reasoning): no
 
 ## Модель 2
 - LLM: Llama 4 Scout
 - Parameters: 109
 - Active Parameters: 17
 - Context Window: 10 000
-- Архитектура: MoE
+- Architecture: MoE
 - Reasoning: no
 - Visual: yes
 - Open Source / Open Weights: Open Weights
-- Speed: 256
-- 16 bit: 113
-- 8 bit: 68
-- GB \ 100k token \ FP16: 18,31
+- Output Speed (t/s): n/a
+- Q16: 256
+- Q8: 113
+- Q4: 68
+- SFP8: n/a
+- MXFP4: n/a
+- KV-кэш: GB \ 100k token \ FP16: 18,31
 - AA-LCR (Long Context Reasoning): 26
 - AA-Omniscience Accuracy: 14
 - AA-Omniscience non-halucination: 21
-- Humanity's Last Exam (HLE): 4
-- GPQA Diamond: 59
 - IFBench: 40
 - MMMU Pro (Visual Reasoning): 53
 
@@ -46,188 +47,196 @@
 - Parameters: 106
 - Active Parameters: 12
 - Context Window: 128
-- Архитектура: MoE
+- Architecture: MoE
 - Reasoning: yes
 - Visual: no
 - Open Source / Open Weights: Open Source
-- Speed: 119
-- 16 bit: 221
-- 8 bit: 117
-- 4 bit: 74
-- GB \ 100k token \ FP16: 17,55
+- Output Speed (t/s): 119
+- Q16: 221
+- Q8: 117
+- Q4: 74
+- SFP8: n/a
+- MXFP4: n/a
+- KV-кэш: GB \ 100k token \ FP16: 17,55
 - AA-LCR (Long Context Reasoning): 44
 - AA-Omniscience Accuracy: 15
 - AA-Omniscience non-halucination: 8
-- Humanity's Last Exam (HLE): 7
-- GPQA Diamond: 73
 - IFBench: 38
+- MMMU Pro (Visual Reasoning): no
 
 ## Модель 4
 - LLM: Ring-flash-2.0
 - Parameters: 103
 - Active Parameters: 6
 - Context Window: 128
-- Архитектура: Hybrid Linear
+- Architecture: Hybrid Linear
 - Reasoning: yes
 - Visual: no
 - Open Source / Open Weights: Open Source
-- Speed: 97
-- 16 bit: 206
-- 8 bit: 110
-- 4 bit: 62
-- SFP8: 62
-- GB \ 100k token \ FP16: 6,10
+- Output Speed (t/s): 97
+- Q16: 206
+- Q8: 110
+- Q4: 62
+- SFP8: n/a
+- MXFP4: 62
+- KV-кэш: GB \ 100k token \ FP16: 6,10
 - AA-LCR (Long Context Reasoning): 21
 - AA-Omniscience Accuracy: 16
 - AA-Omniscience non-halucination: 11
-- Humanity's Last Exam (HLE): 9
-- GPQA Diamond: 73
 - IFBench: 43
+- MMMU Pro (Visual Reasoning): no
 
 ## Модель 5
 - LLM: Ling-flash-2.0
 - Parameters: 103
 - Active Parameters: 6
 - Context Window: 128
-- Архитектура: MoE
+- Architecture: MoE
 - Reasoning: no
 - Visual: no
 - Open Source / Open Weights: Open Source
-- Speed: 73
-- 16 bit: 206
-- 8 bit: 110
-- 4 bit: 62
-- SFP8: 62
-- GB \ 100k token \ FP16: 6,10
+- Output Speed (t/s): 73
+- Q16: 206
+- Q8: 110
+- Q4: 62
+- SFP8: n/a
+- MXFP4: 62
+- KV-кэш: GB \ 100k token \ FP16: 6,10
 - AA-LCR (Long Context Reasoning): 15
 - AA-Omniscience Accuracy: 14
 - AA-Omniscience non-halucination: 6
-- Humanity's Last Exam (HLE): 6
-- GPQA Diamond: 66
 - IFBench: 34
+- MMMU Pro (Visual Reasoning): no
 
 ## Модель 6
 - LLM: Qwen3 Next 80B
 - Parameters: 80
 - Active Parameters: 3
 - Context Window: 262
-- Архитектура: Hybrid Linear
+- Architecture: Hybrid Linear
 - Reasoning: yes
 - Visual: no
 - Open Source / Open Weights: Open Weights
-- Speed: 172
-- 16 bit: 160
-- 8 bit: 85
-- 4 bit: 48
-- GB \ 100k token \ FP16: 2,29
+- Output Speed (t/s): 172
+- Q16: 160
+- Q8: 85
+- Q4: 48
+- SFP8: n/a
+- MXFP4: n/a
+- KV-кэш: GB \ 100k token \ FP16: 2,29
 - AA-LCR (Long Context Reasoning): 51
 - AA-Omniscience Accuracy: 17
 - AA-Omniscience non-halucination: 7
-- Humanity's Last Exam (HLE): 7
-- GPQA Diamond: 74
 - IFBench: 40
+- MMMU Pro (Visual Reasoning): no
 
 ## Модель 7
 - LLM: DeepSeek R1 70B
 - Parameters: 70
 - Active Parameters: 70
 - Context Window: 128
-- Архитектура: Dense
+- Architecture: Dense
 - Reasoning: yes
 - Visual: no
 - Open Source / Open Weights: Open Weights
-- Speed: 42
-- 16 bit: 142
-- 8 bit: 75
-- 4 bit: 43
-- GB \ 100k token \ FP16: 30,52
+- Output Speed (t/s): 42
+- Q16: 142
+- Q8: 75
+- Q4: 43
+- SFP8: n/a
+- MXFP4: n/a
+- KV-кэш: GB \ 100k token \ FP16: 30,52
 - AA-LCR (Long Context Reasoning): 11
 - AA-Omniscience Accuracy: 19
 - AA-Omniscience non-halucination: 19
-- Humanity's Last Exam (HLE): 6
-- GPQA Diamond: 40
 - IFBench: 28
+- MMMU Pro (Visual Reasoning): no
 
 ## Модель 8
 - LLM: Llama 3.3 70B
 - Parameters: 70
 - Active Parameters: 70
 - Context Window: 128
-- Архитектура: Dense
+- Architecture: Dense
 - Reasoning: no
 - Visual: no
 - Open Source / Open Weights: Open Weights
-- Speed: 140
-- 16 bit: 141
-- 8 bit: 75
-- 4 bit: 43
-- GB \ 100k token \ FP16: 30,52
+- Output Speed (t/s): 140
+- Q16: 141
+- Q8: 75
+- Q4: 43
+- SFP8: n/a
+- MXFP4: n/a
+- KV-кэш: GB \ 100k token \ FP16: 30,52
 - AA-LCR (Long Context Reasoning): 15
 - AA-Omniscience Accuracy: 18
 - AA-Omniscience non-halucination: 11
-- Humanity's Last Exam (HLE): 4
-- GPQA Diamond: 50
 - IFBench: 47
+- MMMU Pro (Visual Reasoning): no
 
 ## Модель 9
 - LLM: Llama 3.1 70B
 - Parameters: 70
 - Active Parameters: 70
 - Context Window: 128
-- Архитектура: Dense
+- Architecture: Dense
 - Reasoning: no
 - Visual: no
 - Open Source / Open Weights: Open Weights
-- Speed: 44
-- 16 bit: 141
-- 8 bit: 75
-- 4 bit: 43
-- GB \ 100k token \ FP16: 30,52
+- Output Speed (t/s): 44
+- Q16: 141
+- Q8: 75
+- Q4: 43
+- SFP8: n/a
+- MXFP4: n/a
+- KV-кэш: GB \ 100k token \ FP16: 30,52
 - AA-LCR (Long Context Reasoning): 7
 - AA-Omniscience Accuracy: 16
 - AA-Omniscience non-halucination: 31
-- Humanity's Last Exam (HLE): 5
-- GPQA Diamond: 47
 - IFBench: 31
+- MMMU Pro (Visual Reasoning): no
 
 ## Модель 10
 - LLM: Kimi Linear
 - Parameters: 49
 - Active Parameters: 3
 - Context Window: 1 000
-- Архитектура: Hybrid Linear
+- Architecture: Hybrid Linear
 - Reasoning: no
 - Visual: no
 - Open Source / Open Weights: Open Source
-- Speed: 103
-- 16 bit: 54
-- 8 bit: 29
-- 4 bit: 29
-- GB \ 100k token \ FP16: 10,68
+- Output Speed (t/s): n/a
+- Q16: 103
+- Q8: 54
+- Q4: 29
+- SFP8: n/a
+- MXFP4: 29
+- KV-кэш: GB \ 100k token \ FP16: 10,68
 - AA-LCR (Long Context Reasoning): 26
-- AA-Omniscience non-halucination: 3
-- GPQA Diamond: 41
+- AA-Omniscience Accuracy: n/a
+- AA-Omniscience non-halucination: n/a
 - IFBench: 28
+- MMMU Pro (Visual Reasoning): no
 
 ## Модель 11
 - LLM: Qwen3 VL 32B
 - Parameters: 33
 - Active Parameters: 33
 - Context Window: 262
-- Архитектура: Dense
+- Architecture: Dense
 - Reasoning: no
 - Visual: yes
 - Open Source / Open Weights: Open Weights
-- Speed: 90
-- 16 bit: 66
-- 8 bit: 35
-- 4 bit: 20
-- GB \ 100k token \ FP16: 24,41
+- Output Speed (t/s): 90
+- Q16: 66
+- Q8: 35
+- Q4: 20
+- SFP8: n/a
+- MXFP4: n/a
+- KV-кэш: GB \ 100k token \ FP16: 24,41
 - AA-LCR (Long Context Reasoning): 31
 - AA-Omniscience Accuracy: 14
 - AA-Omniscience non-halucination: 9
-- Humanity's Last Exam (HLE): 6
-- GPQA Diamond: 67
 - IFBench: 39
 - MMMU Pro (Visual Reasoning): 64
 
@@ -236,127 +245,130 @@
 - Parameters: 32
 - Active Parameters: 9
 - Context Window: 128
-- Архитектура: Hybrid MoE
+- Architecture: Hybrid MoE
 - Reasoning: no
 - Visual: no
 - Open Source / Open Weights: Open Source
-- Speed: 454
-- 16 bit: 64
-- 8 bit: 34
-- 4 bit: 19
-- SFP8: 10
-- GB \ 100k token \ FP16: 1,53
+- Output Speed (t/s): 454
+- Q16: 64
+- Q8: 34
+- Q4: 19
+- SFP8: n/a
+- MXFP4: 10
+- KV-кэш: GB \ 100k token \ FP16: 1,53
 - AA-LCR (Long Context Reasoning): 9
 - AA-Omniscience Accuracy: 13
 - AA-Omniscience non-halucination: 13
-- Humanity's Last Exam (HLE): 4
-- GPQA Diamond: 42
 - IFBench: 32
+- MMMU Pro (Visual Reasoning): no
 
 ## Модель 13
 - LLM: NVIDIA Nemotron 3 Nano 30B
 - Parameters: 32
 - Active Parameters: 4
 - Context Window: 1 000
-- Архитектура: MoE
+- Architecture: MoE
 - Reasoning: yes
 - Visual: no
 - Open Source / Open Weights: Open Weights
-- Speed: 189
-- 16 bit: 60
-- 8 bit: 32
-- 4 bit: 21
-- GB \ 100k token \ FP16: 0,57
+- Output Speed (t/s): 189
+- Q16: 60
+- Q8: 32
+- Q4: 21
+- SFP8: n/a
+- MXFP4: n/a
+- KV-кэш: GB \ 100k token \ FP16: 0,57
 - AA-LCR (Long Context Reasoning): 7
 - AA-Omniscience Accuracy: 13
 - AA-Omniscience non-halucination: 10
-- Humanity's Last Exam (HLE): 5
-- GPQA Diamond: 40
 - IFBench: 38
+- MMMU Pro (Visual Reasoning): no
 
 ## Модель 14
 - LLM: GLM-4.7-Flash
 - Parameters: 31
 - Active Parameters: 3
 - Context Window: 200
-- Архитектура: MoE
+- Architecture: MoE
 - Reasoning: no
 - Visual: no
 - Open Source / Open Weights: Open Source
-- Speed: 114
-- 16 bit: 60
-- 8 bit: 36
-- 4 bit: 20
-- SFP8: 18
-- GB \ 100k token \ FP16: 22,41
+- Output Speed (t/s): 114
+- Q16: 60
+- Q8: 36
+- Q4: 20
+- SFP8: n/a
+- MXFP4: 18
+- KV-кэш: GB \ 100k token \ FP16: 22,41
 - AA-LCR (Long Context Reasoning): 15
 - AA-Omniscience Accuracy: 12
 - AA-Omniscience non-halucination: 6
-- Humanity's Last Exam (HLE): 5
-- GPQA Diamond: 45
 - IFBench: 46
+- MMMU Pro (Visual Reasoning): no
 
 ## Модель 15
 - LLM: Qwen3 Coder 30B
 - Parameters: 31
 - Active Parameters: 3
 - Context Window: 262
-- Архитектура: MoE
+- Architecture: MoE
 - Reasoning: no
 - Visual: no
 - Open Source / Open Weights: Open Weights
-- Speed: 111
-- 16 bit: 61
-- 8 bit: 32
-- 4 bit: 19
-- GB \ 100k token \ FP16: 9,16
+- Output Speed (t/s): 111
+- Q16: 61
+- Q8: 32
+- Q4: 19
+- SFP8: n/a
+- MXFP4: n/a
+- KV-кэш: GB \ 100k token \ FP16: 9,16
 - AA-LCR (Long Context Reasoning): 29
 - AA-Omniscience Accuracy: 15
 - AA-Omniscience non-halucination: 21
-- Humanity's Last Exam (HLE): 4
-- GPQA Diamond: 52
 - IFBench: 33
+- MMMU Pro (Visual Reasoning): no
 
 ## Модель 16
 - LLM: Qwen3 30B
 - Parameters: 31
 - Active Parameters: 3
 - Context Window: 262
-- Архитектура: MoE
+- Architecture: MoE
 - Reasoning: no
 - Visual: no
 - Open Source / Open Weights: Open Weights
-- Speed: 75
-- 16 bit: 60
-- 8 bit: 32
-- 4 bit: 18
-- GB \ 100k token \ FP16: 9,16
+- Output Speed (t/s): 75
+- Q16: 60
+- Q8: 32
+- Q4: 18
+- SFP8: n/a
+- MXFP4: n/a
+- KV-кэш: GB \ 100k token \ FP16: 9,16
 - AA-LCR (Long Context Reasoning): 23
 - AA-Omniscience Accuracy: 14
 - AA-Omniscience non-halucination: 5
-- Humanity's Last Exam (HLE): 7
-- GPQA Diamond: 66
 - IFBench: 33
+- MMMU Pro (Visual Reasoning): no
 
 ## Модель 17
 - LLM: Qwen3 VL 30B
 - Parameters: 30
 - Active Parameters: 3
 - Context Window: 262
-- Архитектура: MoE
+- Architecture: MoE
 - Reasoning: no
 - Visual: yes
 - Open Source / Open Weights: Open Weights
-- Speed: 117
-- 16 bit: 60
-- 8 bit: 32
-- 4 bit: 19
-- GB \ 100k token \ FP16: 9,16
+- Output Speed (t/s): 117
+- Q16: 60
+- Q8: 32
+- Q4: 19
+- SFP8: n/a
+- MXFP4: n/a
+- KV-кэш: GB \ 100k token \ FP16: 9,16
 - AA-LCR (Long Context Reasoning): 24
 - AA-Omniscience Accuracy: 15
 - AA-Omniscience non-halucination: 8
-- Humanity's Last Exam (HLE): 6
-- GPQA Diamond: 70
 - IFBench: 33
 - MMMU Pro (Visual Reasoning): 62
 
@@ -365,21 +377,20 @@
 - Parameters: 27
 - Active Parameters: 27
 - Context Window: 128
-- Архитектура: Dense
+- Architecture: Dense
 - Reasoning: no
 - Visual: yes
 - Open Source / Open Weights: Open Weights
-- Speed: 46
-- 16 bit: 54
-- 8 bit: 29
-- 4 bit: 17
+- Output Speed (t/s): 46
+- Q16: 54
+- Q8: 29
+- Q4: 17
 - SFP8: 27
-- GB \ 100k token \ FP16: 47,30
+- MXFP4: n/a
+- KV-кэш: GB \ 100k token \ FP16: 47,30
 - AA-LCR (Long Context Reasoning): 6
 - AA-Omniscience Accuracy: 12
 - AA-Omniscience non-halucination: 9
-- Humanity's Last Exam (HLE): 5
-- GPQA Diamond: 43
 - IFBench: 32
 - MMMU Pro (Visual Reasoning): 48
 
@@ -388,20 +399,20 @@
 - Parameters: 24
 - Active Parameters: 24
 - Context Window: 262
-- Архитектура: Dense
+- Architecture: Dense
 - Reasoning: no
 - Visual: no
 - Open Source / Open Weights: Open Source
-- Speed: 209
-- 16 bit: 48
-- 8 bit: 26
-- 4 bit: 14
-- GB \ 100k token \ FP16: 15,26
+- Output Speed (t/s): 209
+- Q16: 48
+- Q8: 26
+- Q4: 14
+- SFP8: n/a
+- MXFP4: n/a
+- KV-кэш: GB \ 100k token \ FP16: 15,26
 - AA-LCR (Long Context Reasoning): 24
 - AA-Omniscience Accuracy: 15
 - AA-Omniscience non-halucination: 13
-- Humanity's Last Exam (HLE): 3
-- GPQA Diamond: 53
 - IFBench: 31
 - MMMU Pro (Visual Reasoning): 45
 
@@ -410,21 +421,20 @@
 - Parameters: 24
 - Active Parameters: 24
 - Context Window: 128
-- Архитектура: Dense
+- Architecture: Dense
 - Reasoning: no
 - Visual: yes
 - Open Source / Open Weights: Open Weights
-- Speed: 147
-- 16 bit: 67
-- 8 bit: 36
-- 4 bit: 20
-- SFP8: 18
-- GB \ 100k token \ FP16: 15,26
+- Output Speed (t/s): 147
+- Q16: 67
+- Q8: 36
+- Q4: 20
+- SFP8: n/a
+- MXFP4: 18
+- KV-кэш: GB \ 100k token \ FP16: 15,26
 - AA-LCR (Long Context Reasoning): 17
 - AA-Omniscience Accuracy: 14
 - AA-Omniscience non-halucination: 24
-- Humanity's Last Exam (HLE): 4
-- GPQA Diamond: 51
 - IFBench: 34
 - MMMU Pro (Visual Reasoning): 48
 
@@ -433,63 +443,64 @@
 - Parameters: 21
 - Active Parameters: 4
 - Context Window: 131
-- Архитектура: MoE
+- Architecture: MoE
 - Reasoning: yes
 - Visual: no
 - Open Source / Open Weights: Open Source
-- Speed: 308
-- 16 bit: 14
-- 8 bit: 12
-- 4 bit: 12
-- SFP8: 11
-- GB \ 100k token \ FP16: 4,58
+- Output Speed (t/s): 308
+- Q16: 14
+- Q8: 12
+- Q4: 12
+- SFP8: n/a
+- MXFP4: 11
+- KV-кэш: GB \ 100k token \ FP16: 4,58
 - AA-LCR (Long Context Reasoning): 31
 - AA-Omniscience Accuracy: 15
 - AA-Omniscience non-halucination: 7
-- Humanity's Last Exam (HLE): 10
-- GPQA Diamond: 69
 - IFBench: 65
+- MMMU Pro (Visual Reasoning): no
 
 ## Модель 22
 - LLM: Apriel-v1.6
 - Parameters: 15
 - Active Parameters: 15
 - Context Window: 128
-- Архитектура: Dense
+- Architecture: Dense
 - Reasoning: yes
 - Visual: yes
 - Open Source / Open Weights: Open Weights
-- Speed: 156
-- 16 bit: 30
-- 8 bit: 16
-- 4 bit: 9
-- GB \ 100k token \ FP16: 19,07
+- Output Speed (t/s): 156
+- Q16: 30
+- Q8: 16
+- Q4: 9
+- SFP8: n/a
+- MXFP4: n/a
+- KV-кэш: GB \ 100k token \ FP16: 19,07
 - AA-LCR (Long Context Reasoning): 50
 - AA-Omniscience Accuracy: 17
 - AA-Omniscience non-halucination: 8
-- Humanity's Last Exam (HLE): 10
-- GPQA Diamond: 73
 - IFBench: 69
+- MMMU Pro (Visual Reasoning): no
 
 ## Модель 23
 - LLM: Ministral 3 14B
 - Parameters: 14
 - Active Parameters: 14
 - Context Window: 262
-- Архитектура: Dense
+- Architecture: Dense
 - Reasoning: no
 - Visual: yes
 - Open Source / Open Weights: Open Weights
-- Speed: 148
-- 16 bit: 28
-- 8 bit: 15
-- 4 bit: 9
-- GB \ 100k token \ FP16: 15,26
+- Output Speed (t/s): 148
+- Q16: 28
+- Q8: 15
+- Q4: 9
+- SFP8: n/a
+- MXFP4: n/a
+- KV-кэш: GB \ 100k token \ FP16: 15,26
 - AA-LCR (Long Context Reasoning): 22
 - AA-Omniscience Accuracy: 12
 - AA-Omniscience non-halucination: 10
-- Humanity's Last Exam (HLE): 5
-- GPQA Diamond: 57
 - IFBench: 32
 - MMMU Pro (Visual Reasoning): 50
 
@@ -498,42 +509,42 @@
 - Parameters: 14
 - Active Parameters: 14
 - Context Window: 16
-- Архитектура: Dense
+- Architecture: Dense
 - Reasoning: no
 - Visual: yes
 - Open Source / Open Weights: Open Source
-- Speed: 17
-- 16 bit: 11
-- 8 bit: 6
-- 4 bit: 3
-- GB \ 100k token \ FP16: 12,21
-- AA-LCR (Long Context Reasoning): 0
-- AA-Omniscience Accuracy: 14
+- Output Speed (t/s): 17
+- Q16: 11
+- Q8: 6
+- Q4: 3
+- SFP8: n/a
+- MXFP4: n/a
+- KV-кэш: GB \ 100k token \ FP16: 12,21
+- AA-LCR (Long Context Reasoning): n/a
+- AA-Omniscience Accuracy: 13
 - AA-Omniscience non-halucination: 21
-- Humanity's Last Exam (HLE): 4
-- GPQA Diamond: 57
 - IFBench: 24
+- MMMU Pro (Visual Reasoning): no
 
 ## Модель 25
 - LLM: NVIDIA Nemotron Nano 13B
 - Parameters: 13
 - Active Parameters: 13
 - Context Window: 128
-- Архитектура: Dense
+- Architecture: Dense
 - Reasoning: no
 - Visual: yes
 - Open Source / Open Weights: Open Weights
-- Speed: 137
-- 16 bit: 24
-- 8 bit: 13
-- 4 bit: 21
-- SFP8: 24
-- GB \ 100k token \ FP16: 3,81
+- Output Speed (t/s): 137
+- Q16: 24
+- Q8: 13
+- Q4: 21
+- SFP8: n/a
+- MXFP4: 24
+- KV-кэш: GB \ 100k token \ FP16: 3,81
 - AA-LCR (Long Context Reasoning): 17
 - AA-Omniscience Accuracy: 11
 - AA-Omniscience non-halucination: 6
-- Humanity's Last Exam (HLE): 5
-- GPQA Diamond: 44
 - IFBench: 26
 - MMMU Pro (Visual Reasoning): 45
 
@@ -542,21 +553,20 @@
 - Parameters: 12
 - Active Parameters: 12
 - Context Window: 128
-- Архитектура: Dense
+- Architecture: Dense
 - Reasoning: no
 - Visual: yes
 - Open Source / Open Weights: Open Weights
-- Speed: 44
-- 16 bit: 24
-- 8 bit: 15
-- 4 bit: 8
+- Output Speed (t/s): 44
+- Q16: 24
+- Q8: 15
+- Q4: 8
 - SFP8: 12
-- GB \ 100k token \ FP16: 34,33
-- AA-LCR (Long Context Reasoning): 12
+- MXFP4: n/a
+- KV-кэш: GB \ 100k token \ FP16: 34,33
+- AA-LCR (Long Context Reasoning): 7
 - AA-Omniscience Accuracy: 10
 - AA-Omniscience non-halucination: 3
-- Humanity's Last Exam (HLE): 5
-- GPQA Diamond: 35
 - IFBench: 37
 - MMMU Pro (Visual Reasoning): 38
 
@@ -565,20 +575,20 @@
 - Parameters: 11
 - Active Parameters: 11
 - Context Window: 128
-- Архитектура: Dense
+- Architecture: Dense
 - Reasoning: no
 - Visual: yes
 - Open Source / Open Weights: Open Weights
-- Speed: 77
-- 16 bit: 22
-- 8 bit: 12
-- 4 bit: 7
-- GB \ 100k token \ FP16: 12,21
+- Output Speed (t/s): 77
+- Q16: 22
+- Q8: 12
+- Q4: 7
+- SFP8: n/a
+- MXFP4: n/a
+- KV-кэш: GB \ 100k token \ FP16: 12,21
 - AA-LCR (Long Context Reasoning): 12
 - AA-Omniscience Accuracy: 10
 - AA-Omniscience non-halucination: 20
-- Humanity's Last Exam (HLE): 5
-- GPQA Diamond: 32
 - IFBench: 30
 - MMMU Pro (Visual Reasoning): 29
 
@@ -587,41 +597,42 @@
 - Parameters: 9
 - Active Parameters: 9
 - Context Window: 131
-- Архитектура: Dense
+- Architecture: Dense
 - Reasoning: yes
 - Visual: no
 - Open Source / Open Weights: Open Weights
-- Speed: 121
-- 16 bit: 17
-- 8 bit: 9
-- 4 bit: 6
-- GB \ 100k token \ FP16: 1,53
+- Output Speed (t/s): 121
+- Q16: 17
+- Q8: 9
+- Q4: 6
+- SFP8: n/a
+- MXFP4: n/a
+- KV-кэш: GB \ 100k token \ FP16: 1,53
 - AA-LCR (Long Context Reasoning): 23
 - AA-Omniscience Accuracy: 9
 - AA-Omniscience non-halucination: 26
-- Humanity's Last Exam (HLE): 4
-- GPQA Diamond: 56
 - IFBench: 27
+- MMMU Pro (Visual Reasoning): no
 
 ## Модель 29
 - LLM: Qwen3 VL 8B
 - Parameters: 9
 - Active Parameters: 9
 - Context Window: 262
-- Архитектура: Dense
+- Architecture: Dense
 - Reasoning: no
 - Visual: yes
 - Open Source / Open Weights: Open Weights
-- Speed: 97
-- 16 bit: 15
-- 8 bit: 8
-- 4 bit: 5
-- GB \ 100k token \ FP16: 13,73
+- Output Speed (t/s): 97
+- Q16: 15
+- Q8: 8
+- Q4: 5
+- SFP8: n/a
+- MXFP4: n/a
+- KV-кэш: GB \ 100k token \ FP16: 13,73
 - AA-LCR (Long Context Reasoning): 15
 - AA-Omniscience Accuracy: 19
 - AA-Omniscience non-halucination: 10
-- Humanity's Last Exam (HLE): 3
-- GPQA Diamond: 43
 - IFBench: 32
 - MMMU Pro (Visual Reasoning): 47
 
@@ -630,39 +641,41 @@
 - Parameters: 8
 - Active Parameters: 8
 - Context Window: 33
-- Архитектура: Dense
+- Architecture: Dense
 - Reasoning: yes
 - Visual: no
 - Open Source / Open Weights: Open Source
-- Speed: 16
-- 16 bit: 9
-- 8 bit: 5
-- GB \ 100k token \ FP16: 12,21
+- Output Speed (t/s): n/a
+- Q16: 16
+- Q8: 9
+- Q4: 5
+- SFP8: n/a
+- MXFP4: n/a
+- KV-кэш: GB \ 100k token \ FP16: 12,21
 - AA-LCR (Long Context Reasoning): 13
 - AA-Omniscience Accuracy: 11
 - AA-Omniscience non-halucination: 14
-- Humanity's Last Exam (HLE): 6
-- GPQA Diamond: 61
 - IFBench: 20
+- MMMU Pro (Visual Reasoning): no
 
 ## Модель 31
 - LLM: Ministral 3 8B
 - Parameters: 8
 - Active Parameters: 8
 - Context Window: 262
-- Архитектура: Dense
+- Architecture: Dense
 - Reasoning: no
 - Visual: yes
 - Open Source / Open Weights: Open Weights
-- Speed: 193
-- 16 bit: 16
-- 8 bit: 9
-- 4 bit: 5
-- GB \ 100k token \ FP16: 13,73
+- Output Speed (t/s): 193
+- Q16: 16
+- Q8: 9
+- Q4: 5
+- SFP8: n/a
+- MXFP4: n/a
+- KV-кэш: GB \ 100k token \ FP16: 13,73
 - AA-LCR (Long Context Reasoning): 24
 - AA-Omniscience Accuracy: 12
 - AA-Omniscience non-halucination: 7
-- Humanity's Last Exam (HLE): 4
-- GPQA Diamond: 47
 - IFBench: 29
 - MMMU Pro (Visual Reasoning): 46
